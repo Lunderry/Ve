@@ -20,34 +20,6 @@ local plrGui = plr:WaitForChild("PlayerGui")
 local adentroJuego = ReplicatedStorage.Value.AdentroJuego
 local transicion = ReplicatedStorage.Value.Transicion
 
-function module.ConversionGui(nombre: string)
-	local Experimento = plrGui:WaitForChild("Experimentos")[nombre .. "Gui"]
-
-	local turno = {}
-	for _, v in Experimento.CanvasGroup:GetChildren() do
-		turno[v.Name] = false
-
-		local ImageButton = v.Frame:FindFirstChildOfClass("ImageButton")
-
-		ImageButton.MouseButton1Click:Connect(function()
-			turno[v.Name] = not turno[v.Name]
-
-			moduleTween:FastTween(v, {
-				Enum.EasingStyle.Circular,
-				Enum.EasingDirection.Out,
-				0.3,
-				{ Position = UDim2.fromScale(data.PropTurno[turno[v.Name]][1], v.Position.Y.Scale) },
-			})
-			moduleTween:FastTween(ImageButton, {
-				Enum.EasingStyle.Back,
-				Enum.EasingDirection.Out,
-				0.3,
-				{ Rotation = data.PropTurno[turno[v.Name]][2] },
-			})
-		end)
-	end
-end
-
 function module.Gui(nombre: string)
 	local Experimentos = plrGui:WaitForChild("Experimentos")[nombre .. "Gui"]
 	local DatosGui = Experimentos.Datos

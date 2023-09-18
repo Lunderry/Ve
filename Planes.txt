@@ -1,0 +1,43 @@
+Planes:
+hacer que la creacion de nuevos movimientos se haga con la calucaladora.
+
+Cosas que hacer:
+calculadora gui, testear --
+poner datos al cuadrado, cubico y sqrt --
+hacer entrar sistema nivel --
+quitar pais de vetty y acomodarlo --
+sistema de aceleración --
+sistema de conversor poner en velocidades y aceleraciones --
+re escribir los datos de conversoders --
+cartel para enseñar el proyecto vetty --
+sistema de conversor en los movimientos --
+Arreglar movimiento rectilinio uniforme. --
+Arreglar tiro parabolico. --
+unidades datos frame (automatizar ??!!?!?)--
+arrglar datos cambio unidad (no se actualiza) --
+arreglar cambio tiempo --
+quitar que se pueda cambiar en proceso la configuracion --
+poner gravedad en los datos --
+vetty agregar funcionalidad de operaciones y rework un poquito --
+vetty funcion lina 239 --
+cache vettyFuncion --
+acomodar los datos para hacer solo una pregunta o varios --
+plantear preguntas de vetty --
+hacer que string con numero se pueda juntar  --
+
+--[[
+    Arreglar operacion para encontrar grados
+]]
+rellenar datos
+
+ponerle pose
+
+ortografia vetty
+
+arreglar plano
+
+re hacer plano cartesiano 
+
+tabla de datos (gravedad de luna)
+
+vetty datos globales

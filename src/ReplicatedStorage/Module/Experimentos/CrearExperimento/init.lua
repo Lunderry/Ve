@@ -1,10 +1,12 @@
 local module = {}
 
+local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
-local conversionNumeros = require(ReplicatedStorage.Module.Data.ConversionUnidades)
+local moduleUnidades = require(ReplicatedStorage.Module.ConversionUnidades)
+local dataUnidades = require(ReplicatedStorage.Module.ConversionUnidades.DataUnidades)
 local resource = require(script.Resource)
 local moduleData = require(script.Data)
 
@@ -63,131 +65,133 @@ local function Mover(prop, data, folderJuego)
 end
 
 function module.ConversionValue(data)
-	local folderValue = ReplicatedStorage.ExpFolder:WaitForChild(data.Nombre)
-	local prop = folderValue:WaitForChild("Props")
+	local folderValue: Folder = ReplicatedStorage.ExpFolder:WaitForChild(data.Nombre)
+	local prop: Folder = folderValue:WaitForChild("Props")
 	--[[Variables]]
-	local experimentoGui = plrGui:WaitForChild("Experimentos")[data.Nombre .. "Gui"]
+	local experimentoGui: ScreenGui = plrGui:WaitForChild("Experimentos")[data.Nombre .. "Gui"]
 
-	local configuracion = experimentoGui:FindFirstChild("Configuracion").ScrollingFrame
-	local folderJuego = workspace[data.Nombre].Folder
-	local eleccionValue = folderValue.Estados.Eleccion
+	local configuracion: ScrollingFrame = experimentoGui:FindFirstChild("Configuracion").ScrollingFrame
+	local folderJuego: Folder = workspace[data.Nombre].Folder
+	local eleccionValue = folderValue.Estados.Eleccion --Cambio dependiendo del texto
 
-	--Cambio dependiendo del texto
 	local tbConversion = {}
-
+	local unidadReferencia = {}
 	--crear la tabla
 	for _, v in data.Conversion do
-		local cambiarNombre = if v == "Altura" then "Longitud" else v
-
-		tbConversion[cambiarNombre] = {
+		local valor, tipo
+		if type(v) == "table" then
+			valor = v[1]
+			unidadReferencia[valor] = v[2]
+			if v[2] == "Aceleracion" then
+				tipo = "m/seg²"
+			elseif v[2] == "Velocidad" then
+				tipo = "m/seg"
+			else
+				tipo = dataUnidades.NeutralMedicion[v[2]]
+			end
+		elseif v == "Aceleracion" then
+			valor = v
+			tipo = "m/seg²"
+		elseif v == "Velocidad" then
+			valor = v
+			tipo = "m/seg"
+		else
+			valor = v
+			tipo = dataUnidades.NeutralMedicion[v]
+		end
+		if not unidadReferencia[valor] then
+			unidadReferencia[valor] = v
+		end
+		tbConversion[valor] = {
 			["Numero"] = 0,
-			["Longitud1"] = if v == "Altura" then data.Conversion["Longitud"] else data.Conversion[v],
-			["Longitud2"] = if v == "Altura" then data.Conversion["Longitud"] else data.Conversion[v],
+			["Tipo"] = { tipo, tipo },
 		}
 	end
 
-	local cambioTexto = false
+	local function forUnidad(tb: {}, index: string)
+		for i, v in tb do
+			if type(v) == "table" then
+				forUnidad(v, i)
+				continue
+			end
+			local textBox
 
-	for i, v in data.ListaBlanca do
-		if typeof(v) == "table" then
-			if i == "Basta" then
-				for _, q in v do
-					local textSecu = configuracion[q]
-					textSecu:GetPropertyChangedSignal("Text"):Connect(function()
-						if cambioTexto == true then
-							return
-						end
-						if not tonumber(textSecu.Text) then
-							eleccionValue.Value = ""
-							return
-						end
-						cambioTexto = true
-						eleccionValue.Value = textSecu.Name
+			if configuracion[v].ClassName == "Frame" then
+				textBox = configuracion[v].Numero
+				local botonUnidad = configuracion[v].Unidad
+				if botonUnidad:IsA("TextButton") then
+					--botonUnidad = textbutton
+					local strUnidad, turnoUnidad = "", 1
 
-						for _, r in prop:GetChildren() do
-							if table.find(data.ListaBlanca.Basta, r.Name) then
-								if r.Name ~= textSecu.Name then
-									configuracion[r.Name].Text = ""
-								end
-							end
-						end
-						if table.find(data.Conversion, textSecu.Name) then
-							local CambiarNombre = if textSecu.Name == "Altura" then "Longitud" else textSecu.Name
+					botonUnidad.MouseButton1Click:Connect(function()
+						eleccionValue.Value = textBox.Parent.Name
+						turnoUnidad += 1
+						strUnidad, turnoUnidad = moduleUnidades:UnidadConNumero(turnoUnidad, unidadReferencia[v])
 
-							tbConversion[CambiarNombre].Numero = tonumber(textSecu.Text)
-							prop[textSecu.Name].Value =
-								conversionNumeros.Conversion(tbConversion[CambiarNombre], CambiarNombre)
-						else
-							prop[textSecu.Name].Value = tonumber(textSecu.Text)
-						end
+						botonUnidad.Text = strUnidad
+						tbConversion[v].Tipo[1] = strUnidad
+
+						prop[v].Value = moduleUnidades:Convertidor(tbConversion[v])
+
 						Mover(prop, data, folderJuego)
-						cambioTexto = false
 					end)
+				else
+					--botonUnidad = textbox
+					botonUnidad.FocusLost:Connect(function()
+						eleccionValue.Value = textBox.Parent.Name
+						tbConversion[v].Tipo[1] = botonUnidad.Text
+
+						prop[v].Value = moduleUnidades:Convertidor(tbConversion[v])
+						Mover(prop, data, folderJuego)
+					end)
+
+					if unidadReferencia[v] == "Aceleracion" then
+						botonUnidad.FocusLost:Connect(function()
+							botonUnidad.Text = botonUnidad.Text .. "²"
+						end)
+					end
 				end
 			else
-				for _, q in v do
-					local textTerciario = configuracion[q]
-					textTerciario:GetPropertyChangedSignal("Text"):Connect(function()
-						if not tonumber(textTerciario.Text) then
-							eleccionValue.Value = ""
-							return
-						end
-						eleccionValue.Value = textTerciario.Name
-						if table.find(data.Conversion, textTerciario.Name) then
-							local CambiarNombre = if textTerciario.Name == "Altura"
-								then "Longitud"
-								else textTerciario.Name
-
-							tbConversion[CambiarNombre].Numero = tonumber(textTerciario.Text)
-							prop[textTerciario.Name].Value =
-								conversionNumeros.Conversion(tbConversion[CambiarNombre], CambiarNombre)
-						else
-							prop[textTerciario.Name].Value = tonumber(textTerciario.Text)
-						end
-						Mover(prop, data, folderJuego)
-					end)
-				end
+				textBox = configuracion[v]
 			end
-		else
-			local textPrin = configuracion[v]
-			textPrin:GetPropertyChangedSignal("Text"):Connect(function()
-				if not tonumber(textPrin.Text) then
+
+			textBox.FocusLost:Connect(function()
+				if not tonumber(textBox.Text) then
+					textBox.Text = ""
+					eleccionValue.Value = ""
 					return
 				end
-				if table.find(data.Conversion, textPrin.Name) then
-					tbConversion[textPrin.Name].Numero = tonumber(textPrin.Text)
-					prop[textPrin.Name].Value = conversionNumeros.Conversion(tbConversion[textPrin.Name], textPrin.Name)
+				if textBox:FindFirstAncestorOfClass("Frame") then
+					eleccionValue.Value = textBox.Parent.Name
 				else
-					prop[textPrin.Name].Value = tonumber(textPrin.Text)
+					eleccionValue.Value = textBox.Name
 				end
+				if index == "Basta" then
+					for _, q in prop:GetChildren() do
+						if table.find(data.ListaBlanca.Basta, q.Name) and q.Name ~= v then
+							local confiGui = configuracion[q.Name]
+							if confiGui.ClassName == "Frame" then
+								confiGui.Numero.Text = ""
+							else
+								confiGui.Text = ""
+							end
+						end
+					end
+				end
+
+				if resource.findCompleto(data.Conversion, v) then
+					tbConversion[v].Numero = tonumber(textBox.Text)
+					prop[v].Value = moduleUnidades:Convertidor(tbConversion[v])
+				else
+					prop[v].Value = tonumber(textBox.Text)
+				end
+
 				Mover(prop, data, folderJuego)
 			end)
 		end
 	end
-	--------------------------
-	local CanvasGroup = experimentoGui.CanvasGroup
 
-	for _, v in pairs(CanvasGroup:GetDescendants()) do
-		if v:IsA("TextButton") then
-			local nombreTipo = if v.Parent.Parent.Name == "Longitud" then "Altura" else v.Parent.Parent.Name
-			if v.Name == data.Conversion[nombreTipo] then
-				v.BackgroundColor3 = Color3.fromRGB(4, 170, 43)
-			end
-			v.MouseButton1Click:Connect(function()
-				local Tipo = tbConversion[nombreTipo]
-
-				CanvasGroup[nombreTipo].ScrollingFrame[Tipo.Longitud1].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				if Tipo.Longitud1 == v.Name then
-					Tipo.Longitud1 = data.Conversion[nombreTipo]
-				else
-					Tipo.Longitud1 = v.Name
-				end
-
-				prop[nombreTipo].Value = conversionNumeros.Conversion(tbConversion[nombreTipo], nombreTipo)
-				CanvasGroup[nombreTipo].ScrollingFrame[Tipo.Longitud1].BackgroundColor3 = Color3.fromRGB(4, 170, 43)
-			end)
-		end
-	end
+	forUnidad(data.ListaBlanca, "")
 end
 
 function module.CambioTiempo(data)
@@ -282,9 +286,6 @@ function module.Funcionamiento(data)
 	local textVelocidad = experimentoGui.TextBox.Value
 
 	--Se crea la tabla de conversion
-
-	--
-
 	local Pausar = estados.Pausar
 	local Iniciar = estados.Iniciar
 	--[[
@@ -293,7 +294,7 @@ function module.Funcionamiento(data)
 	]]
 	--Cambiar Estados
 	Pausar.Value = not Pausar.Value
-	
+
 	experimentoGui.Pausar.MouseButton1Click:Connect(function()
 		Pausar.Value = not Pausar.Value
 	end)
@@ -335,7 +336,9 @@ function module.Funcionamiento(data)
 		local pasa = true
 
 		local cont = 0
+
 		for _, v in pairs(configuracion:GetChildren()) do
+			v = if v.ClassName == "Frame" then v.Unidad else v
 			if table.find(data.ListaBlanca, v.Name) then
 				if not tonumber(v.Text) then
 					pasa = false
@@ -365,7 +368,17 @@ function module.Funcionamiento(data)
 		local Calculos = data.Calculos(table.unpack(resource.buscarObjetos(data, "PonerCalculo", prop, "X")))
 
 		for i, v in Calculos do
-			datosGui[i].Text = v
+			datosGui[i].Numero.Text = moduleUnidades:Convertidor({
+				["Numero"] = v,
+				["Tipo"] = { datosGui[i].Convertir.Value, datosGui[i].Unidad.Text },
+			}) .. datosGui[i].Unidad.Text
+		end
+		for _, v in prop:GetChildren() do
+			datosGui[v.Name].ValorNeutral.Value = v.Value
+			datosGui[v.Name].Numero.Text = moduleUnidades:Convertidor({
+				["Numero"] = v.Value,
+				["Tipo"] = { datosGui[v.Name].Convertir.Value, datosGui[v.Name].Unidad.Text },
+			}) .. datosGui[v.Name].Unidad.Text
 		end
 
 		prop.Tiempo.Value = 0
@@ -380,45 +393,39 @@ function module.Funcionamiento(data)
 		--[[
 			Revisa que tenga pausa para que puedas cambiar el tiempo a la hora que tu desees
 		]]
-		local turno = ""
+
 		for _, v in datosGui:GetChildren() do
-			if v:IsA("TextBox") then
-				local gpc, focusConnect, focusLostConnect
-				gpc = v:GetPropertyChangedSignal("Text"):Connect(function()
-					if Pausar.Value == false or turno ~= v.Name then
+			if v:IsA("Frame") and v.Numero.TextEditable == true then
+				ConnectDiscconect[#ConnectDiscconect + 1] = v.Numero.FocusLost:Connect(function()
+					local textNumero = string.gsub(v.Numero.Text, "%l", "")
+					if not Pausar.Value and textNumero then
 						return
 					end
+					prop[v.Name].Value = moduleUnidades:Convertidor({
+						["Numero"] = tonumber(textNumero),
+						["Tipo"] = { v.Convertir.Value, v.Unidad.Text },
+					})
 
-					if tonumber(v.Text) then
-						prop[v.Name].Value = tonumber(v.Text)
+					local r = data.Funcion(
+						table.unpack(resource.buscarObjetos(data, "PonerFuncion", prop, "Cambio" .. v.Name))
+					)
 
-						local Resultado = data.Funcion(
-							table.unpack(resource.buscarObjetos(data, "PonerFuncion", prop, "Cambio" .. v.Name))
-						)
-
-						for i, q in Resultado do
-							if i ~= v.Name then
-								if prop:FindFirstChild(i) then
-									prop[i].Value = q
-								end
-								if datosGui:FindFirstChild(i) then
-									datosGui[i].Text = q
-								end
+					for i, q in r do
+						if i ~= v.Name then
+							if prop:FindFirstChild(i) then
+								prop[i].Value = q
+							end
+							if datosGui:FindFirstChild(i) then
+								datosGui[i].ValorNeutral.Value = q
+								datosGui[i].Numero.Text = moduleUnidades:Convertidor({
+									["Numero"] = q,
+									["Tipo"] = { datosGui[i].Convertir.Value, datosGui[i].Unidad.Text },
+								}) .. datosGui[i].Unidad.Text
 							end
 						end
-
-						folderJuego.Mov.Position = data.Sumar(Resultado, alturaIncio)
 					end
+					folderJuego.Mov.Position = data.Sumar(r, alturaIncio)
 				end)
-				focusConnect = v.Focused:Connect(function()
-					turno = v.Name
-				end)
-				focusLostConnect = v.Focused:Connect(function()
-					turno = ""
-				end)
-				table.insert(ConnectDiscconect, gpc)
-				table.insert(ConnectDiscconect, focusConnect)
-				table.insert(ConnectDiscconect, focusLostConnect)
 			end
 		end
 
@@ -451,11 +458,18 @@ function module.Funcionamiento(data)
 						prop[i].Value = v
 					end
 					if datosGui:FindFirstChild(i) then
-						datosGui[i].Text = v
+						datosGui[i].ValorNeutral.Value = v
+						datosGui[i].Numero.Text = moduleUnidades:Convertidor({
+							["Numero"] = v,
+							["Tipo"] = { datosGui[i].Convertir.Value, datosGui[i].Unidad.Text },
+						}) .. " " .. datosGui[i].Unidad.Text
 					end
 				end
 			end
-			datosGui.Tiempo.Text = prop.Tiempo.Value
+			datosGui.Tiempo.Numero.Text = moduleUnidades:Convertidor({
+				["Numero"] = prop.Tiempo.Value,
+				["Tipo"] = { datosGui.Tiempo.Convertir.Value, datosGui.Tiempo.Unidad.Text },
+			}) .. " " .. datosGui.Tiempo.Unidad.Text
 
 			folderJuego.Mov.Position = data.Sumar(Resultado, alturaIncio)
 		end)
@@ -477,7 +491,8 @@ function module.Funcionamiento(data)
 				prop[i].Value = v
 			end
 			if datosGui:FindFirstChild(i) then
-				datosGui[i].Text = v
+				datosGui[i].ValorNeutral.Value = 0
+				datosGui[i].Numero.Text = "0"
 			end
 		end
 		folderJuego.Mov.Position = data.Sumar(resultado, alturaIncio)
@@ -531,7 +546,10 @@ function module.LimitanteTexto(data)
 		task.delay(0, function()
 			local textBox = folderNivel.Configuracion.ScrollingFrame[i]
 
-			textBox:GetPropertyChangedSignal("Text"):Connect(function()
+			if textBox.ClassName == "Frame" then
+				textBox = textBox.Numero
+			end
+			textBox.FocusLost:Connect(function()
 				if tonumber(textBox.Text) then
 					local nm = tonumber(textBox.Text)
 					if nm < v[1] then

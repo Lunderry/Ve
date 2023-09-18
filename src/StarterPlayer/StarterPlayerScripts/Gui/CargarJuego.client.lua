@@ -13,7 +13,6 @@ local plr = plrs.LocalPlayer
 local plrGui = plr.PlayerGui
 
 local paisValue = plr.Datos.Pais
-local pais = paisValue.Value
 
 local configuracion = ReplicatedStorage.re["Cliente-Server"].Configuracion
 
@@ -21,9 +20,6 @@ local cargandoGui = plrGui.Cargando
 
 local termino = false
 
-paisValue:GetPropertyChangedSignal("Value"):Connect(function()
-	pais = paisValue.Value
-end)
 task.spawn(function()
 	local image = cargandoGui.Fondo
 	while not termino do
@@ -94,14 +90,14 @@ for _, v in pairs(carga:GetChildren()) do
 				)
 				idioma.Selector.Visible = false
 				vettyFuncion:Entrar(false)
-				vettyFuncion.crearTexto(datos[pais]["Tutorial"]["Tutorial1"])
+				vettyFuncion.crearTexto(datos["Tutorial"]["Tutorial1"])
 				for _, image in pairs(plrGui.VettyScreenGui:GetChildren()) do
 					if image:IsA("ImageButton") then
 						image.Visible = true
 					end
 				end
 
-				vettyFuncion.crearTexto(datos[pais]["Tutorial"]["Tutorial2"])
+				vettyFuncion.crearTexto(datos["Tutorial"]["Tutorial2"])
 				vettyFuncion:Salir(true)
 				configuracion:FireServer("PrimeraVez", true)
 			end

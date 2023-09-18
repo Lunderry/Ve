@@ -1,3 +1,4 @@
+--[[Module conversor unidadess]]
 local module = {}
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -16,19 +17,19 @@ local partModule = require(ReplicatedStorage.Module.PartModule)
 local function buscarVelocidades(unidadVelocidad: string): {}
 	local unidades = {}
 
-	local cont = 1
 	local unidadNombre = ""
 	for i = 1, #unidadVelocidad do
 		local str = string.sub(unidadVelocidad, i, i)
 		if str == "/" then
-			unidades[cont] = unidadNombre
-			cont += 1
+			unidades[1] = unidadNombre
 			unidadNombre = ""
 		else
 			unidadNombre ..= str
 		end
 	end
-	unidades[cont] = unidadNombre
+	unidadNombre = string.gsub(unidadNombre, "²", "")
+
+	unidades[2] = unidadNombre
 
 	local verificacion = { false, false }
 	for i = 1, #unidades do
@@ -56,7 +57,7 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 	local unidadInicio, unidadConvertir = table.unpack(parametroConv.Tipo) --
 
 	if unidadInicio == unidadConvertir then
-		return parametroConv.Numero, { { "Como ambas unidades son iguales se regresa igual	", data.Colores.Normal } }
+		return parametroConv.Numero, {}
 	end
 
 	for i, v in data.Medicion do
@@ -81,39 +82,108 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 		end
 	end
 	if buscarTipo == "" then
-		if unidadConvertir == nil then
-			unidadConvertir = "m/seg"
-		elseif string.sub(unidadInicio, #unidadInicio, #unidadInicio) == "²" then
-			unidadInicio = string.gsub(unidadConvertir, "²", "")
-		end
-		if string.sub(unidadConvertir, #unidadConvertir, #unidadConvertir) == "²" then
-			unidadConvertir = string.gsub(unidadConvertir, "²", "")
-		end
+		local aceleracion = false
 
-		table.insert(seguimiento, {
-			"Como la unidad es velocidad/aceleración se tiene que despejar ambas unidades a una unidad estandar",
-			data.Colores.Normal,
-		})
+		if string.find(unidadInicio, "²") then
+			aceleracion = true
+		end
+		if unidadConvertir == nil then
+			if string.find(unidadInicio, "²") then
+				unidadConvertir = "m/seg²"
+			else
+				unidadConvertir = "m/seg"
+			end
+		end
 
 		unidadInicio, unidadConvertir = buscarVelocidades(unidadInicio), buscarVelocidades(unidadConvertir)
 
-		local un1, un2 =
-			self:Convertidor({
-				["Numero"] = parametroConv.Numero,
-				["Tipo"] = { unidadInicio[1], unidadConvertir[1] },
-			}), self:Convertidor({ ["Numero"] = 1, ["Tipo"] = { unidadInicio[2], unidadConvertir[2] } })
+		if aceleracion then
+			table.insert(seguimiento, {
+				'Como la unidad es una aceleración se tiene que despejar ambas unidades "'
+					.. unidadInicio[1]
+					.. "/"
+					.. unidadInicio[2]
+					.. '²" a "'
+					.. unidadConvertir[1]
+					.. "/"
+					.. unidadConvertir[2]
+					.. '²"',
+				data.Colores.Normal,
+			})
+		else
+			table.insert(seguimiento, {
+				'Como la unidad es la velocidad se tiene que despejar ambas unidades "'
+					.. unidadInicio[1]
+					.. "/"
+					.. unidadInicio[2]
+					.. '" a "'
+					.. unidadConvertir[1]
+					.. "/"
+					.. unidadConvertir[2]
+					.. '"',
 
-		local r = un1 / un2
-
-		table.insert(seguimiento, { "Respuesta de unidad inicial: " .. un1, data.Colores.Resultado })
-		table.insert(seguimiento, { "Repuesta de unidad conversor: " .. un2, data.Colores.Resultado })
+				data.Colores.Normal,
+			})
+		end
 
 		table.insert(seguimiento, {
-			"Ahora se dividen unidad inicial / unidad conversor (" .. un1 .. "/" .. un2 .. ")",
+			'Vamos a despejar "' .. unidadInicio[1] .. '" a "' .. unidadConvertir[1] .. '"',
+			data.Colores.Normal,
+		})
+
+		local un1, un1Seguimiento = self:ConvertidorSeguimiento({
+			["Numero"] = parametroConv.Numero,
+			["Tipo"] = { unidadInicio[1], unidadConvertir[1] },
+		})
+
+		for _, v in un1Seguimiento do
+			table.insert(seguimiento, v)
+		end
+
+		table.insert(seguimiento, {
+			'Vamos a despejar "' .. unidadInicio[2] .. '" a "' .. unidadConvertir[2] .. '"',
+			data.Colores.Normal,
+		})
+
+		local un2, un2Seguimiento =
+			self:ConvertidorSeguimiento({ ["Numero"] = 1, ["Tipo"] = { unidadInicio[2], unidadConvertir[2] } })
+
+		for _, v in un2Seguimiento do
+			table.insert(seguimiento, v)
+		end
+
+		table.insert(seguimiento, { "Respuesta de Longitud = " .. un1 .. unidadConvertir[1], data.Colores.Resultado })
+
+		if aceleracion then
+			table.insert(seguimiento, {
+				"Como el tiempo es al cuadrado se tiene que potenciar ",
+				data.Colores.Normal,
+			})
+			table.insert(seguimiento, { un2 .. unidadConvertir[2] .. "²", data.Colores.Operaciones })
+			un2 ^= 2
+			table.insert(
+				seguimiento,
+				{ "Respuesta de Tiempo Cuadrado = " .. un2 .. unidadConvertir[2] .. "²", data.Colores.Resultado }
+			)
+		else
+			table.insert(seguimiento, { "Repuesta de Tiempo = " .. un2 .. unidadConvertir[2], data.Colores.Resultado })
+		end
+
+		resultado = un1 / un2
+
+		table.insert(seguimiento, {
+			"Ahora se divide longitud entre tiempo",
+			data.Colores.Normal,
+		})
+		table.insert(seguimiento, {
+			un1 .. unidadConvertir[1] .. "/" .. un2 .. unidadConvertir[2],
 			data.Colores.Operaciones,
 		})
 
-		table.insert(seguimiento, { "Respuesta: r", data.Colores.Resultado })
+		table.insert(
+			seguimiento,
+			{ "Respuesta = " .. resultado .. unidadConvertir[1] .. "/" .. unidadConvertir[2], data.Colores.Resultado }
+		)
 		return resultado, seguimiento
 	end
 
@@ -298,18 +368,20 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 			end
 
 			table.insert(seguimiento, {
-				"Resultado = " .. partModule.Coma(numeroDespejado) .. data.NeutralMedicion[buscarTipo],
+				"Resultado = " .. partModule.Coma(numeroDespejado) .. parametroConv.Tipo[2],
 				data.Colores.Resultado,
 			})
 
-			table.insert(seguimiento, {
-				'Ahora con la unidad convertida lo convertimos de "'
-					.. data.NeutralMedicion[buscarTipo]
-					.. '" a "'
-					.. parametroConv.Tipo[2]
-					.. '"',
-				data.Colores.Normal,
-			})
+			if data.NeutralMedicion[buscarTipo] ~= parametroConv.Tipo[2] then
+				table.insert(seguimiento, {
+					'Ahora con la unidad convertida lo convertimos de "'
+						.. data.NeutralMedicion[buscarTipo]
+						.. '" a "'
+						.. parametroConv.Tipo[2]
+						.. '"',
+					data.Colores.Normal,
+				})
+			end
 
 			local con, seg = self:ConvertidorSeguimiento({
 				["Numero"] = numeroDespejado,
@@ -357,10 +429,10 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 				})
 			end
 
-			table.insert(seguimiento, {
-				"Resultado = " .. partModule.Coma(numeroDespejado) .. data.NeutralMedicion[buscarTipo],
-				data.Colores.Resultado,
-			})
+			-- table.insert(seguimiento, {
+			-- 	"Resultado = " .. partModule.Coma(numeroDespejado) .. data.NeutralMedicion[buscarTipo],
+			-- 	data.Colores.Resultado,
+			-- })
 
 			local cont, seg = self:ConvertidorSeguimiento({
 				["Numero"] = numeroDespejado,
@@ -371,11 +443,6 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 			for _, v in seg do
 				table.insert(seguimiento, v)
 			end
-
-			table.insert(seguimiento, {
-				partModule.Coma(resultado) .. data.NeutralMedicion[buscarTipo] .. " Es equivalente a:",
-				data.Colores.Normal,
-			})
 
 			table.insert(
 				seguimiento,
@@ -391,9 +458,9 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 				.. unidadConvertir
 				.. '" son una unidad "No estándar" tenemos que convertir una de las dos unidades, en este caso seria "'
 				.. unidadInicio
-				.. '" a una unidad neutral ("'
+				.. '" a una unidad neutral "'
 				.. data.NeutralMedicion[buscarTipo]
-				.. '")',
+				.. '"',
 			data.Colores.Normal,
 		})
 
@@ -406,14 +473,16 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 			table.insert(seguimiento, v)
 		end
 
-		table.insert(seguimiento, {
-			'Ahora con la unidad convertida lo convertimos de "'
-				.. data.NeutralMedicion[buscarTipo]
-				.. '" a "'
-				.. unidadConvertir
-				.. '"',
-			data.Colores.Normal,
-		})
+		if data.NeutralMedicion[buscarTipo] ~= unidadConvertir then
+			table.insert(seguimiento, {
+				'Ahora con la unidad convertida lo convertimos de "'
+					.. data.NeutralMedicion[buscarTipo]
+					.. '" a "'
+					.. unidadConvertir
+					.. '"',
+				data.Colores.Normal,
+			})
+		end
 
 		cont, seg = self:ConvertidorSeguimiento({
 			["Numero"] = cont,
@@ -438,16 +507,8 @@ function module:Convertidor(parametroConv: {})
 		return parametroConv.Numero
 	end
 
-	local insp = {}
 	for i, v in data.Medicion do
 		local tbEspecial = if v.Especial then v.Especial else nil
-
-		if v[unidadInicio] or (tbEspecial and tbEspecial[unidadInicio]) then
-			insp[1] = true
-		end
-		if v[unidadConvertir] or (tbEspecial and tbEspecial[unidadConvertir]) then
-			insp[2] = true
-		end
 		if
 			(v[unidadInicio] and v[unidadConvertir])
 			or (tbEspecial and (tbEspecial[unidadInicio] or tbEspecial[unidadConvertir]))
@@ -468,21 +529,30 @@ function module:Convertidor(parametroConv: {})
 	end
 	if buscarTipo == "" then
 		--Velocidad
-		if unidadConvertir == nil then
-			unidadConvertir = "m/seg"
-		elseif string.sub(unidadInicio, #unidadInicio, #unidadInicio) == "²" then
-			unidadInicio = string.gsub(unidadConvertir, "²", "")
+		local aceleracion = false
+
+		if string.find(unidadInicio, "²") then
+			aceleracion = true
 		end
-		if string.sub(unidadConvertir, #unidadConvertir, #unidadConvertir) == "²" then
-			unidadConvertir = string.gsub(unidadConvertir, "²", "")
+		if unidadConvertir == nil then
+			if string.find(unidadInicio, "²") then
+				unidadConvertir = "m/seg²"
+			else
+				unidadConvertir = "m/seg"
+			end
 		end
 
 		unidadInicio, unidadConvertir = buscarVelocidades(unidadInicio), buscarVelocidades(unidadConvertir)
 
+		local tiempoConversor = self:Convertidor({ ["Numero"] = 1, ["Tipo"] = { unidadInicio[2], unidadConvertir[2] } })
+
+		if aceleracion then
+			tiempoConversor = tiempoConversor ^ 2
+		end
 		return self:Convertidor({
 			["Numero"] = parametroConv.Numero,
 			["Tipo"] = { unidadInicio[1], unidadConvertir[1] },
-		}) / self:Convertidor({ ["Numero"] = 1, ["Tipo"] = { unidadInicio[2], unidadConvertir[2] } })
+		}) / tiempoConversor
 	end
 
 	local tipoMedicion = data.Medicion[buscarTipo]
@@ -589,6 +659,20 @@ function module.buscarTipo(unidad: string): string
 		end
 	end
 	return nil
+end
+
+function module:UnidadConNumero(tno: number, unidad: string): string
+	local strTurno = ""
+
+	if not data.Turno[tno] then
+		tno = 1
+	end
+	strTurno = data.Turno[tno][unidad]
+	if strTurno == nil then
+		return self:UnidadConNumero(1, unidad)
+	else
+		return strTurno, tno
+	end
 end
 
 return module

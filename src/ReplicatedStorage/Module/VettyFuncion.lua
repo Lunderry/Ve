@@ -1,306 +1,324 @@
 local module = {}
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local plrs = game:GetService("Players")
-
-repeat
-	task.wait()
-until plrs.LocalPlayer
-local plr = plrs.LocalPlayer
+local RunService = game:GetService("RunService")
 
 local moduleTween = require(ReplicatedStorage.Module.TweenMaster)
-local modulePart = require(ReplicatedStorage.Module.PartModule)
-local TextoData = require(ReplicatedStorage.Module.Data.TextoIdiomas)
-local ImagenesData = require(ReplicatedStorage.Module.Data.DataImagenes)
-local data = require(ReplicatedStorage.Module.Data.DataPreguntas)
+local moduleOperacion = require(ReplicatedStorage.Module.Operaciones)
 
-local Instancias = ReplicatedStorage.Resource
+local textoData = require(ReplicatedStorage.Module.Data.TextoIdiomas)
+local imagenesData = require(ReplicatedStorage.Module.Data.DataImagenes)
+local preguntasData = require(ReplicatedStorage.Module.Data.DataPreguntas)
 
-local folderSonido = Instancias.sonidos
-local folderControles = ReplicatedStorage.Value.ControlesVetty
+repeat
+	task.wait(0.1)
+until Players.LocalPlayer
 
-local adentroAjustes = ReplicatedStorage.Value.AdentroAjustes
-local adentro = ReplicatedStorage.Value.Adentro
+local plr = Players.LocalPlayer
+local plrGui = plr:WaitForChild("PlayerGui")
+local mouse: Mouse = plr:GetMouse()
 
-local clickValue = folderControles.Click
-local bloqueoValue = folderControles.Bloqueo
-local temaValue = folderControles.Tema
-local estadoValue = folderControles.Estado
-local posicion = folderControles.Posicion
+local resource: Folder = ReplicatedStorage.Resource
 
-local VettyGui = plr.PlayerGui:WaitForChild("VettyScreenGui")
+local folderSonido: Folder = resource.Sonidos
+local folderControles: Folder = ReplicatedStorage.Value.ControlesVetty
 
-local frame = VettyGui.Frame
-local Vetty = VettyGui.Frame.Vetty
+local adentroValue: BoolValue = ReplicatedStorage.Value.Adentro
 
-local subtema = ""
-local salirDelay = false
-local terminar = false
+local clickValue: BoolValue = folderControles.Click
+local bloqueoValue: BoolValue = folderControles.Bloqueo
+local estadoValue: StringValue = folderControles.Estado
+local poseValue: StringValue = folderControles.Pose
 
-local pais = plr:WaitForChild("Datos"):FindFirstChild("Pais")
+local screenVettyGui: ScreenGui = plrGui:WaitForChild("VettyScreenGui")
 
---texto
+local interfaz: Frame = screenVettyGui.Interfaz
+local contenido: Frame = interfaz.Contenido
 
---1 frame, 2 betty
-function module.crearTexto(tabla)
-	if terminar == true then
+local scrollingConversacion: ScrollingFrame = contenido.ScrollingFrame
+local infoLabel: TextLabel = contenido.TextLabel
+
+local debounceCTexto = false
+--
+function module.lecturaTexto(tb: {})
+	local connectionMouse = mouse.Button1Down:Connect(function()
+		clickValue.Value = true
+	end)
+
+	if debounceCTexto then
 		return
 	end
-	terminar = true
-	estadoValue.Value = "Lectura"
-	bloqueoValue.Value = false
+	debounceCTexto = true
 
-	for i = 1, #tabla do
+	for i = 1, #tb do
+		bloqueoValue.Value = false
 		clickValue.Value = false
-		local str = tabla[i][1]
-		posicion.Value = tabla[i][2]
-		local textLabel = Instancias.TextLabel:Clone()
-		textLabel.Parent = frame.Frame
+		estadoValue.Value = "Lectura"
+		poseValue.Value = tb[i][2]
 
-		moduleTween:FastTween(Vetty, {
+		moduleTween:FastTween(interfaz.Vetty, {
 			Enum.EasingStyle.Back,
-			Enum.EasingDirection.Out,
+			Enum.EasingDirection.InOut,
 			0.05,
 			{
 				Rotation = 10,
-				Position = UDim2.fromScale(Vetty.Position.X.Scale + 0.05, Vetty.Position.Y.Scale - 0.1),
+				Position = interfaz.Vetty.Position + UDim2.fromScale(0.05, 0.05),
 			},
 			0,
 			true,
 		})
 
-		moduleTween:FastTween(Vetty, {
-			Enum.EasingStyle.Back,
-			Enum.EasingDirection.Out,
-			0.05,
-			{
-				Rotation = 10,
-				Position = UDim2.fromScale(Vetty.Position.X.Scale + 0.05, Vetty.Position.Y.Scale + 0.05),
-			},
-			0,
-			true,
-		})
+		interfaz.Vetty.Image = imagenesData[poseValue.Value]["Abierto"]
 
-		Vetty.Image = ImagenesData[posicion.Value]["Abierto"]
-		for q = 1, #str do
-			if clickValue.Value == true then
-				clickValue.Value = false
-				break
-			end
+		local tskOperacion, tskTexto
 
-			if tabla[i][3] then
-				textLabel.Position = UDim2.fromScale(0.764, 0.5)
-				textLabel.Size = UDim2.fromScale(0.445, 0.923)
-				frame.Frame.ImageLabel.Image = "rbxassetid://" .. tostring(tabla[i][3])
-				frame.Frame.ImageLabel.Visible = true
-			else
-				textLabel.Position = UDim2.fromScale(0.5, 0.5)
-				textLabel.Size = UDim2.fromScale(0.962, 0.923)
-				frame.Frame.ImageLabel.Visible = false
-			end
+		if tb[i][3] then
+			infoLabel.Position = UDim2.fromScale(0.5, 0.19)
+			infoLabel.Size = UDim2.fromScale(0.962, 0.302)
 
-			task.wait(0.04)
-			textLabel.Text = string.sub(str, 1, q)
-			----
-			--repararlo
-			if _G.DataConfi.Sonido > 0 then
+			tskOperacion = task.defer(function()
+				contenido.Operacion.Text = tb[i][3]
+				for s = 1, #tb[i][3] do
+					contenido.Operacion.Visible = true
+					contenido.Operacion.TextLabel.Text = moduleOperacion.TextColor(string.sub(tb[i][3], 1, s))
+					task.wait(0.02)
+				end
+			end)
+		else
+			infoLabel.Position = UDim2.fromScale(0.5, 0.5)
+			infoLabel.Size = UDim2.fromScale(0.962, 0.923)
+		end
+
+		tskTexto = task.defer(function()
+			for s = 1, #tb[i][1] do
+				infoLabel.Text = string.sub(tb[i][1], 1, s)
+
 				local sonido = folderSonido.Hablar:Clone()
 				sonido.PitchShiftSoundEffect.Octave = Random.new():NextNumber(1.5, 2)
-				sonido.Volume = Random.new():NextNumber(0.1, folderSonido.Hablar.Volume)
+				sonido.Volume = Random.new():NextNumber(0.1, 0.3)
 				sonido.PlaybackSpeed = Random.new():NextNumber(2, 3)
-				sonido.Parent = Instancias.basura
+				sonido.Parent = resource.Basura
 				sonido:Play()
+
+				for _ = 1, 2 do
+					RunService.Heartbeat:Wait()
+				end
+			end
+		end)
+		interfaz.Avance.Visible = true
+		interfaz.Avance.Text = "Click para terminar"
+
+		repeat
+			task.wait(0.1)
+		until clickValue.Value or infoLabel.Text == tb[i][1]
+
+		infoLabel.Text = tb[i][1]
+		resource.Basura:ClearAllChildren()
+
+		clickValue.Value = false
+		bloqueoValue.Value = true
+
+		interfaz.Avance.Text = "Click para avanzar"
+
+		if tskTexto then
+			task.cancel(tskTexto)
+			if tb[i][3] then
+				contenido.Operacion.TextLabel.Text = moduleOperacion.TextColor(tb[i][3])
 			end
 		end
-		for _, v in pairs(Instancias.basura:GetChildren()) do
-			v:Destroy()
+		if tskOperacion then
+			task.cancel(tskOperacion)
 		end
-		frame.Avance.Visible = true
-		textLabel.Text = str
-		bloqueoValue.Value = true
-		repeat
-			task.wait()
-		until clickValue.Value == true
-		textLabel:Destroy()
-		clickValue.Value = false
-		bloqueoValue.Value = false
-		frame.Avance.Visible = false
-	end
-	posicion.Value = "Normal"
-	Vetty.Image = ImagenesData[posicion.Value]["Abierto"]
-	bloqueoValue.Value = true
-	estadoValue.Value = "Eleccion"
-	terminar = false
 
-	frame.Titulo.Text = ""
-	moduleTween:WaitTween(
-		frame.Titulo,
+		repeat
+			clickValue:GetPropertyChangedSignal("Value"):Wait()
+		until clickValue.Value
+
+		contenido.Operacion.Visible = false
+		clickValue.Value = false
+
+		infoLabel.Text = ""
+
+		interfaz.Avance.Visible = false
+	end
+	connectionMouse:Disconnect()
+
+	debounceCTexto = false
+
+	bloqueoValue.Value = true
+	poseValue.Value = "Normal"
+	estadoValue.Value = "Eleccion"
+
+	interfaz.Titulo.Text = ""
+	interfaz.Titulo.Visible = false
+	interfaz.Vetty.Image = imagenesData[poseValue.Value]["Abierto"]
+
+	moduleTween:FastTween(
+		interfaz.Titulo,
 		{ Enum.EasingStyle.Back, Enum.EasingDirection.In, 0.1, { Size = UDim2.fromScale(0, 0.15) } }
 	)
-	frame.Titulo.Visible = false
 end
 
---textButton crear Nombre
-local function crearSeleccion(v: TextButton)
-	v.MouseEnter:Connect(function()
-		folderSonido.MouseEnter:Play()
-	end)
-
-	v.MouseButton1Click:Connect(function()
-		if salirDelay == true then
-			return
-		end
-		folderSonido.SonidoClick:Play()
-		local sf = frame.Frame.ScrollingFrame:Clone()
-		sf.Parent = frame.Frame
-		for _, txb in pairs(sf:GetChildren()) do
-			if txb:IsA("TextButton") then
-				txb:Destroy()
-			end
-		end
-		frame.Frame.ScrollingFrame.Visible = false
-		--creo otra subtabla
-
-		local button = Instancias.TextButton:Clone()
-		button.Name = "Regresar"
-		button.Text = TextoData[pais.Value]["Regresar"]
-		button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-		button.TextColor3 = Color3.fromRGB(255, 255, 255)
-		button.Parent = sf
-
-		button.MouseButton1Click:Connect(function()
-			frame.Titulo.Visible = false
-			folderSonido.SonidoClick:Play()
-			sf:Destroy()
-			frame.Frame.ScrollingFrame.Visible = true
-		end)
-		button.MouseEnter:Connect(function()
-			folderSonido.MouseEnter:Play()
-		end)
-
-		sf.Visible = true
-		subtema = v.Name
-		local layout = 1
-		sf.CanvasSize = UDim2.fromScale(0, 0)
-		print(data[pais.Value], pais.Value, temaValue.Value)
-		for name, _ in pairs(data[pais.Value][temaValue.Value][v.Name]) do
-			local txb = Instancias.TextButton:Clone()
-			txb.Name = name
-			txb.Text = name
-			txb.Parent = sf
-			txb.LayoutOrder = layout
-			layout += 1
-			txb.MouseButton1Click:Connect(function()
-				frame.Titulo.Text = subtema
-
-				frame.Titulo.Visible = true
-				frame.Titulo.Text = v.Name .. " - " .. txb.Name
-				moduleTween:FastTween(
-					frame.Titulo,
-					{ Enum.EasingStyle.Circular, Enum.EasingDirection.Out, 0.1, { Size = UDim2.fromScale(0.4, 0.15) } }
-				)
-				folderSonido.SonidoClick:Play()
-
-				sf:Destroy()
-				module.crearTexto(data[pais.Value][temaValue.Value][v.Name][txb.Name])
-				frame.Frame.ScrollingFrame.Visible = true
-			end)
-			txb.MouseEnter:Connect(function()
-				folderSonido.MouseEnter:Play()
-			end)
-		end
-		modulePart.automaticSize(sf)
-	end)
-end
-
-function module.crearTxb()
-	frame.Frame.ScrollingFrame.UIGridLayout.CellSize = UDim2.fromScale(0.9, 1)
-	frame.Frame.ScrollingFrame.Salir.Text = TextoData[pais.Value]["Salir"]
-	for _, v in pairs(frame.Frame.ScrollingFrame:GetChildren()) do
-		if v:IsA("TextButton") and v.Name ~= "Salir" then
+function module:crearSeleccion(tb: {}, completo: {}, seguimientoTurno: {})
+	for _, v in scrollingConversacion:GetChildren() do
+		if not v:IsA("UIGridLayout") then
 			v:Destroy()
 		end
 	end
-	frame.Frame.ScrollingFrame.CanvasSize = UDim2.fromScale(0, 0)
-	frame.Frame.ScrollingFrame.UIGridLayout.CellSize = UDim2.fromScale(0.9, 1 / 1.5)
+
+	local botonSalir = resource.TextButton:Clone()
+	botonSalir.Name = "Salir"
+	botonSalir.Text = "Salir"
+	botonSalir.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	botonSalir.TextColor3 = Color3.fromRGB(255, 255, 255)
+	botonSalir.Parent = scrollingConversacion
+
+	local salirMBC = botonSalir.MouseButton1Click:Connect(function()
+		if #seguimientoTurno == 0 then
+			self:Salir(true)
+			return
+		end
+		local tbAnterior = completo
+
+		for i = 1, #seguimientoTurno - 1 do
+			tbAnterior = tbAnterior[seguimientoTurno[i]]
+		end
+		table.remove(seguimientoTurno, #seguimientoTurno)
+		if #seguimientoTurno == 0 then
+			interfaz.SelectorScrolling.Visible = true
+		end
+		self:crearSeleccion(tbAnterior, completo, seguimientoTurno)
+	end)
+
+	local salirDest
+
+	salirDest = botonSalir.Destroying:Connect(function()
+		task.delay(0.01, function()
+			salirDest:Disconnect()
+			salirMBC:Disconnect()
+		end)
+	end)
+
 	local layout = 1
-	for i, _ in pairs(data[pais.Value][temaValue.Value]) do
-		local txb = Instancias.TextButton:Clone()
-		txb.Name = i
-		txb.Text = i
-		txb.Parent = frame.Frame.ScrollingFrame
+	for nombre, _ in tb do
+		local txb = resource.TextButton:Clone()
+		txb.Name = nombre
+		txb.Text = nombre
 		txb.LayoutOrder = layout
+		txb.Parent = scrollingConversacion
 		layout += 1
-		crearSeleccion(txb)
+
+		local botonMBC = txb.MouseButton1Click:Connect(function()
+			interfaz.SelectorScrolling.Visible = false
+
+			if tb[nombre][1] then
+				for i = 1, #seguimientoTurno do
+					if i == 1 then
+						interfaz.Titulo.Text = seguimientoTurno[i]
+					else
+						interfaz.Titulo.Text = interfaz.Titulo.Text .. " - " .. seguimientoTurno[i]
+					end
+				end
+				interfaz.Titulo.Text = interfaz.Titulo.Text .. " - " .. nombre
+
+				interfaz.Titulo.Visible = true
+
+				moduleTween:FastTween(interfaz.Titulo, {
+					Enum.EasingStyle.Circular,
+					Enum.EasingDirection.Out,
+					0.1,
+					{ Size = UDim2.fromScale(0.4, 0.15) },
+				})
+
+				module.lecturaTexto(tb[nombre])
+			else
+				table.insert(seguimientoTurno, nombre)
+				self:crearSeleccion(tb[nombre], completo, seguimientoTurno)
+			end
+		end)
+		local botonDest
+
+		botonDest = txb.Destroying:Connect(function()
+			task.delay(0.01, function()
+				botonDest:Disconnect()
+				botonMBC:Disconnect()
+			end)
+		end)
 	end
-	modulePart.automaticSize(frame.Frame.ScrollingFrame)
+	-- if not cacheMouseButton1Click[nivel] then
+	-- 	cacheMouseButton1Click[nivel] = {}
+	-- end
+	-- for _, v in cache do
+	-- 	table.insert(cacheMouseButton1Click[nivel], v)
+	-- end
 end
 
 local tbVisible = {}
 --boton de salir
 function module:Salir(despedida: boolean)
-	salirDelay = true
+	interfaz.Fondo.BackgroundTransparency = 1
 
-	moduleTween:FastTween(frame.Fondo, {
+	moduleTween:FastTween(interfaz.Fondo, {
 		Enum.EasingStyle.Back,
 		Enum.EasingDirection.Out,
 		0.3,
 		{ Position = UDim2.fromScale(0.326, 0.594), Rotation = 0 },
 	})
 
-	frame.Fondo.BackgroundTransparency = 1
-
-	if despedida == true then
-		self.crearTexto(data[pais.Value]["Despedida"])
+	if despedida then
+		self.lecturaTexto(preguntasData["Despedida"])
 	end
-	estadoValue.Value = "Lectura"
 	moduleTween:FastTween(
-		frame,
+		interfaz,
 		{ Enum.EasingStyle.Back, Enum.EasingDirection.In, 0.3, { Position = UDim2.fromScale(2, 0.5), Rotation = 10 } }
 	)
-	adentro.Value = false
-	salirDelay = false
+
 	for _, v in pairs(tbVisible) do
 		v.Visible = true
 	end
 	table.clear(tbVisible)
+
+	estadoValue.Value = "Lectura"
+
+	adentroValue.Value = false
 end
 --boton de entrar
 
 function module:Entrar(entrar: boolean)
-	if adentro.Value == true or adentroAjustes.Value == true then
+	if adentroValue.Value then
 		return
 	end
-	for _, v in pairs(plr.PlayerGui.Experimentos:GetDescendants()) do
-		if v:IsA("GuiBase") and v.Visible == true then
+	for _, v in pairs(plrGui.Experimentos:GetDescendants()) do
+		if v:IsA("GuiBase") and v.Visible then
 			v.Visible = false
 			table.insert(tbVisible, v)
 		end
 	end
-	adentro.Value = true
-	folderSonido.SonidoClick:Play()
-	frame.Fondo.BackgroundTransparency = 0
 
-	moduleTween:WaitTween(frame, {
+	adentroValue.Value = true
+	interfaz.Fondo.BackgroundTransparency = 0
+
+	moduleTween:WaitTween(interfaz, {
 		Enum.EasingStyle.Back,
 		Enum.EasingDirection.Out,
 		0.1,
-		{ Position = UDim2.fromScale(0.5, 0.5), Rotation = 0 },
+		{ Position = UDim2.fromScale(0.55, 0.5), Rotation = 0 },
 	})
-	moduleTween:FastTween(frame.Fondo, {
+	moduleTween:FastTween(interfaz.Fondo, {
 		Enum.EasingStyle.Bounce,
 		Enum.EasingDirection.Out,
 		1,
 		{ Position = UDim2.fromScale(0.353, 0.653), Rotation = 5 },
 	})
 
-	if entrar == true then
-		self.crearTexto(data[pais.Value]["Base"])
+	if entrar then
+		self.lecturaTexto(preguntasData["Base"])
 	end
 end
 
 function module:Pack(tb)
 	self:Entrar(false)
-	self.crearTexto(tb)
+	self.lecturaTexto(tb)
 	self:Salir(false)
 end
 

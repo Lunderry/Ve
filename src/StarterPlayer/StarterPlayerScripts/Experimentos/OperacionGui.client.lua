@@ -3,7 +3,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local modulePart = require(ReplicatedStorage.Module.PartModule)
 local moduleOperacion = require(ReplicatedStorage.Module.Operaciones)
-local resource = require(script.resource)
 
 repeat
 	task.wait(0.1)
@@ -24,7 +23,7 @@ local crearVariable: Frame = calculadoraGui.CrearVariable
 local optrigonometria: ScrollingFrame = calculadoraGui.Clave
 
 escribirBox:GetPropertyChangedSignal("Text"):Connect(function()
-	textOperacion.Text = resource:TextColor(escribirBox.Text)
+	textOperacion.Text = moduleOperacion.TextColor(escribirBox.Text)
 end)
 
 for _, v: TextButton in optrigonometria:GetChildren() do
@@ -38,8 +37,8 @@ for _, v: TextButton in optrigonometria:GetChildren() do
 				str = v.Name
 			end
 
-			escribirBox.Text = resource.insertarPalabra(escribirBox.Text, str, escribirBox.CursorPosition)
-			textOperacion.Text = resource:TextColor(escribirBox.Text)
+			escribirBox.Text = moduleOperacion.insertarPalabra(escribirBox.Text, str, escribirBox.CursorPosition)
+			textOperacion.Text = moduleOperacion.TextColor(escribirBox.Text)
 		end)
 	end
 end
@@ -73,7 +72,6 @@ crearVariable.TextButton.MouseButton1Click:Connect(function()
 	frame.Name = valores.Index.Text
 	frame.Frame.Index.Text = valores.Index.Text
 	frame.Frame.Value.Text = tonumber(valores.Value.Text)
-	frame.Parent = calculadoraGui.DatosVariable.ScrollingFrame
 
 	tablaOperacion[frame.Name] = valores.Value.Text
 
@@ -87,13 +85,8 @@ crearVariable.TextButton.MouseButton1Click:Connect(function()
 		frame:Destroy()
 	end)
 
-	local indexPrincipal, valuePrincipal = crearVariable.Frame.Index.Text, tonumber(crearVariable.Frame.Value.Text)
+	local indexPrincipal, valuePrincipal = valores.Index.Text, tonumber(valores.Value.Text)
 
-	for _, v in crearVariable.Frame:GetChildren() do
-		if v:IsA("TextBox") then
-			v.Text = ""
-		end
-	end
 	Connection[#Connection + 1] = frame.Frame.Index.FocusLost:Connect(function()
 		tablaOperacion[indexPrincipal] = nil
 		tablaOperacion[frame.Frame.Index.Text] = valuePrincipal
@@ -107,11 +100,13 @@ crearVariable.TextButton.MouseButton1Click:Connect(function()
 		tablaOperacion[indexPrincipal] = tonumber(frame.Frame.Value.Text)
 		valuePrincipal = tonumber(frame.Frame.Value.Text)
 	end)
+	frame.Parent = calculadoraGui.DatosVariable.ScrollingFrame
 end)
 
 calculadoraGui.Calcular.MouseButton1Click:Connect(function()
-	local a2 = moduleOperacion:crearOperacion(moduleOperacion.crearTabla(escribirBox.Text, tablaOperacion))
+	local a = moduleOperacion.crearTabla(escribirBox.Text, tablaOperacion)
+	local b = moduleOperacion:crearOperacion(a)
 
 	calculadoraGui.Resultado.Op.Texto.Text =
-		modulePart.Coma(moduleOperacion:resolverOperacion(a2, tablaOperacion, tipoCalculo))
+		modulePart.Coma(moduleOperacion:resolverOperacion(b, tablaOperacion, tipoCalculo))
 end)

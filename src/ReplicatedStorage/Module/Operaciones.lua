@@ -10,18 +10,10 @@ matematicas.signosMatema = { "/", "*", "+", "-", "%", "^", "√", "²", "³" }
 matematicas.signosTrigon = { "cos", "sin", "tan" }
 
 function matematicas.Trigonometria(numero: number, tipo: string, modo: string): number
-	if modo == "rad" then
+	if modo == "deg" then
 		numero = math.rad(numero)
-	else
-		numero = math.deg(numero)
 	end
-	if tipo == "cos" then
-		return math.cos(numero)
-	elseif tipo == "sin" then
-		return math.sin(numero)
-	elseif tipo == "tan" then
-		return math.tan(numero)
-	end
+	return math[tipo](numero)
 end
 
 function matematicas.Basicas(n: {}, tipo: string)
@@ -29,8 +21,6 @@ function matematicas.Basicas(n: {}, tipo: string)
 		return n[1] / n[2]
 	elseif tipo == "*" then
 		return n[1] * n[2]
-	elseif tipo == "%" then
-		return n[1] % n[2]
 	elseif tipo == "+" then
 		return n[1] + n[2]
 	elseif tipo == "-" then
@@ -136,17 +126,15 @@ local function limpiarNuevaTabla(final: {}, tb: {})
 end
 local function agregarPalabras(texto: {}, pos)
 	local str = ""
-	local palabras = 0
 	for i = pos, #texto do
 		local s = string.sub(texto, i, i)
 		if not table.find(matematicas.bloqVariable, s) then
 			str ..= s
-			palabras += 1
 		else
 			break
 		end
 	end
-	return str, palabras
+	return str, #str
 end
 
 function module.crearTabla(texto: string, variables: {}): {}
@@ -159,7 +147,7 @@ function module.crearTabla(texto: string, variables: {}): {}
 			if str ~= " " then
 				local s, c = agregarPalabras(texto, i)
 				if variables[s] then
-					bloq = c
+					bloq = c - 1
 					table.insert(tb, s)
 				else
 					table.insert(tb, str)
@@ -244,6 +232,7 @@ function module:crearOperacion(operacion: {}, pos: number): {}
 					finalTabla = limpiarNuevaTabla(finalTabla, newTabla)
 					table.clear(newTabla)
 				end
+
 				local t, c = self:crearOperacion(operacion, i + 1)
 				bloq += c
 				if resta then
@@ -272,6 +261,8 @@ function module:crearOperacion(operacion: {}, pos: number): {}
 				table.insert(newTabla, v)
 			elseif not table.find(matematicas.bloqVariable, string.sub(newTabla[#newTabla], 1, 1)) then
 				newTabla[#newTabla] ..= v
+			elseif v ~= "" then
+				table.insert(newTabla, v)
 			end
 		else
 			bloq -= 1
@@ -291,25 +282,20 @@ local refe = {
 	["²"] = { "Potencia", 2 },
 	["³"] = { "Potencia", 2 },
 	["^"] = { "Potencia", 2 },
-	["/"] = { "Dividir", 3 },
-	["*"] = { "Multiplicar", 4 },
-	["+"] = { "Sumar", 5 },
-	["-"] = { "Sumar", 5 },
+	["*"] = { "Multiplicar", 3 },
+	["/"] = { "Multiplicar", 3 },
+	["+"] = { "Sumar", 4 },
+	["-"] = { "Sumar", 4 },
 }
 local Indentificacion = {
 	["Potencia"] = { "√", "²", "³" },
 	["Sumar"] = { "+", "-" },
 }
 
---[[
-	HACER QUE LA POTENCIA SIRVA
-	HACER UN BOTON PARA PONER SIGNOS DE POTENCIA
-]]
-
 function module:resolverOperacion(operacion: {}, variables: {}, tTipo): number
 	local i = 1
 
-	local jerarquia = { [6] = "Libre" }
+	local jerarquia = { [5] = "Libre" }
 	for _, v in operacion do
 		if refe[v] then
 			local ind = refe[v]
@@ -319,19 +305,18 @@ function module:resolverOperacion(operacion: {}, variables: {}, tTipo): number
 		end
 	end
 
-	for t = 1, 6 do
+	for t = 1, 5 do
 		local turno = jerarquia[t]
 		if turno == nil then
 			continue
 		end
 		i = 1
 		while i <= #operacion do
-			local v
-			if type(operacion[i]) == "string" and #operacion[i] > 1 and string.sub(operacion[i], 1, 1) == "-" then
-				v = string.sub(operacion[i], 2, #operacion[i])
-			else
-				v = operacion[i]
-			end
+			local v = if type(operacion[i]) == "string"
+					and #operacion[i] > 1
+					and string.sub(operacion[i], 1, 1) == "-"
+				then string.sub(operacion[i], 2, #operacion[i])
+				else operacion[i]
 
 			if turno == "Parentesis" and type(v) == "table" then
 				local d = entregarData(v)
@@ -352,18 +337,18 @@ function module:resolverOperacion(operacion: {}, variables: {}, tTipo): number
 				operacion[i] = r
 
 				if not table.find(matematicas.bloqVariable, operacion[i - 1]) and i > 1 then
-					jerarquia[4] = "Multiplicar"
+					jerarquia[3] = "Multiplicar"
 					table.insert(operacion, i, "*")
 					i += 1
 				end
 
 				if not table.find(matematicas.bloqVariable, operacion[i + 1]) and i < #operacion then
-					jerarquia[4] = "Multiplicar"
+					jerarquia[3] = "Multiplicar"
 					table.insert(operacion, i + 1, "*")
 				end
 			elseif turno == "Potencia" and table.find(Indentificacion.Potencia, v) then
 				if v == "²" then
-					operacion[i - 1] = buscarNumero(operacion[i - 1], variables) ^ 2
+					operacion[i - 1] = math.pow(buscarNumero(operacion[i - 1], variables), 2)
 					table.remove(operacion, i)
 				elseif v == "³" then
 					operacion[i - 1] = buscarNumero(operacion[i - 1], variables) ^ 3
@@ -374,8 +359,7 @@ function module:resolverOperacion(operacion: {}, variables: {}, tTipo): number
 				end
 			elseif
 				(turno == "Potencia" and v == "^")
-				or (turno == "Multiplicar" and v == "*")
-				or (turno == "Dividir" and v == "/")
+				or (turno == "Multiplicar" and (v == "*" or v == "/"))
 				or (turno == "Sumar" and table.find(Indentificacion.Sumar, v))
 			then
 				operacion[i] = matematicas.Basicas(
@@ -392,7 +376,75 @@ function module:resolverOperacion(operacion: {}, variables: {}, tTipo): number
 			i += 1
 		end
 	end
-	return operacion[1], operacion
+	return operacion[1]
+end
+
+local colores = {
+	'<font color = "rgb(222, 100, 40)" >', --amarillo
+	'<font color = "rgb(181, 27, 224)" >', -- rosa
+	'<font color = "rgb(33, 73, 205)" >', -- azul
+
+	["[]"] = '<font color = "rgb( 62, 56, 104 )" >', -- morado
+	["{}"] = '<font color = "rgb(238, 250, 7)" >', -- amarillo
+}
+
+function module.quitarPalabras(texto: string, lado: number)
+	if #texto == 1 and lado == 0 then
+		texto = ""
+	elseif lado > 1 then
+		texto = string.sub(texto, 1, lado - 2) .. string.sub(texto, lado, #texto)
+	end
+	return texto
+end
+function module.insertarPalabra(texto: string, poner: string, lado: number)
+	return string.sub(texto, 1, lado - 1) .. poner .. string.sub(texto, lado, #texto)
+end
+
+local function cambioColor(color: string, pos: number, text: string)
+	return string.sub(text, 1, pos - 1)
+		.. color
+		.. string.sub(text, pos, pos)
+		.. "</font>"
+		.. string.sub(text, pos + 1, #text)
+end
+
+function module.TextColor(texto: string): string
+	local posColor = 1
+	local i = 1
+
+	while i <= #texto do
+		local str = string.sub(texto, i, i)
+
+		if str == "{" then
+			local cont = i
+			for q = i, #texto do
+				if string.sub(texto, q, q) == "}" then
+					break
+				else
+					cont += 1
+				end
+			end
+			texto = string.sub(texto, 1, i - 1)
+				.. colores["{}"]
+				.. string.sub(texto, i, cont)
+				.. "</font>"
+				.. string.sub(texto, cont + 1, #texto)
+			i += #colores["[]"] + #"</font>" + (cont - i) - 2
+		elseif str == "[" or str == "]" then
+			texto = cambioColor(colores["[]"], i, texto)
+			i += #colores["[]"] + #"</font>"
+		elseif str == "(" then
+			texto = cambioColor(colores[posColor], i, texto)
+			i += #colores[posColor] + #"</font>"
+			posColor = if posColor == 3 then 1 else posColor + 1
+		elseif str == ")" then
+			posColor = if posColor == 1 then 3 else posColor - 1
+			texto = cambioColor(colores[posColor], i, texto)
+			i += #colores[posColor] + #"</font>"
+		end
+		i += 1
+	end
+	return texto
 end
 
 return module

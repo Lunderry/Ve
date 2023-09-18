@@ -1,33 +1,32 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local plrs = game:GetService("Players")
-local uis = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
 
-repeat
-	task.wait()
-until plrs.LocalPlayer
-
-local plr = plrs.LocalPlayer
-local plrGui = plr.PlayerGui
-local mouse = plr:GetMouse()
-
-local pais = plr:WaitForChild("Datos").Pais
-
-local guiPlanoCartesiano = plrGui:WaitForChild("Experimentos").PlanoCartesianoGui
 -- module
-local TextoData = require(ReplicatedStorage.Module.Data.TextoIdiomas)
 local modulePart = require(ReplicatedStorage.Module.PartModule)
 local fisicaFun = require(script.Parent.FiscaFunciones)
-local sd = require(script.Parent.ModuleScript)
+local registrarData = require(script.Parent.ModuleScript)
+--
+repeat
+	task.wait(0.1)
+until Players.LocalPlayer
+
+local plr = Players.LocalPlayer
+local plrGui = plr:WaitForChild("PlayerGui")
+local mouse = plr:GetMouse()
+
+local guiPlanoCartesiano = plrGui:WaitForChild("Experimentos").PlanoCartesianoGui
 
 --variable
-local cam = workspace.CurrentCamera
 
 local folderResource = guiPlanoCartesiano.Resource
-local folderValue = folderResource.Value
-local folderSonido = folderResource.Sonidos
-
 local configuracionesGui = guiPlanoCartesiano.Configuraciones
+
+local guiValue = folderResource.Value
+local guiSonido = folderResource.Sonidos
+
+local cam = workspace.CurrentCamera
 
 local pos = {
 	["x"] = 0,
@@ -38,40 +37,38 @@ local pos = {
 
 for _, v in pairs(configuracionesGui.Selector.ScrollingFrame:GetChildren()) do
 	if v:IsA("Frame") then
-		local textB = v:FindFirstChildOfClass("TextBox")
-		textB:GetPropertyChangedSignal("Text"):Connect(function()
-			if tonumber(textB.Text) then
-				pos[textB.Name] = tonumber(textB.Text)
+		local txtBox = v:FindFirstChildOfClass("TextBox")
+		txtBox:GetPropertyChangedSignal("Text"):Connect(function()
+			if tonumber(txtBox.Text) then
+				pos[txtBox.Name] = tonumber(txtBox.Text)
 			else
-				textB.Text = "0"
+				txtBox.Text = "0"
 			end
 		end)
 	end
 end
 ----
-local PlanoEspera = false
+local planoEspera = false
 
 guiPlanoCartesiano.Listo.MouseButton1Click:Connect(function()
-	if PlanoEspera == true then
-		folderSonido.Error:Play()
+	if planoEspera then
+		guiSonido.Error:Play()
 		return
 	end
 	for i, v in pairs(pos) do
 		if i == "x" or i == "y" then
 			if v == 0 then
-				modulePart.Error(guiPlanoCartesiano.TextError, TextoData[pais.Value]["Errores"][1])
-				folderSonido.Error:Play()
+				guiSonido.Error:Play()
 				return
 			end
 			if v % 2 == 0 then
-				modulePart.Error(guiPlanoCartesiano.TextError, TextoData[pais.Value]["Errores"][2])
-				folderSonido.Error:Play()
+				guiSonido.Error:Play()
 				return
 			end
 		end
 	end
-	PlanoEspera = true
-	folderValue.Entrar.Value = false
+	planoEspera = true
+	guiValue.Entrar.Value = false
 
 	fisicaFun.CreacionPlano(pos)
 
@@ -80,14 +77,14 @@ guiPlanoCartesiano.Listo.MouseButton1Click:Connect(function()
 			v.Text = ""
 		end
 	end
-	PlanoEspera = false
+	planoEspera = false
 end)
 
 ----------------
-local value = ReplicatedStorage.Value
+local folderValue = ReplicatedStorage.Value
 
-local folderNivel2 = value.Fisica.Nivel2
-local vettyfolder = value.ControlesVetty
+local folderNivel2 = folderValue.Fisica.Nivel2
+local vettyfolder = folderValue.ControlesVetty
 
 local centroVector = folderNivel2.CentroVector
 local objetoMover = folderNivel2.Mover
@@ -117,13 +114,13 @@ mouse.Button1Down:Connect(function()
 		and mouse.Target.Transparency == 0
 	then
 		objetoMover.Value.Position = mouse.Target.CFrame.Position
-		sd.sacarData()
+		registrarData.sacarData()
 	end
-	folderValue.Click.Value = true
+	guiValue.Click.Value = true
 end)
 
 mouse.Button1Up:Connect(function()
-	folderValue.Click.Value = false
+	guiValue.Click.Value = false
 end)
 
 objetoMover:GetPropertyChangedSignal("Value"):Connect(function()
@@ -140,19 +137,22 @@ local mouseData = guiPlanoCartesiano.MouseData
 local camViewport = cam.ViewportSize
 
 vettyfolder.Tema:GetPropertyChangedSignal("Value"):Connect(function()
-	if vettyfolder.Tema.Value ~= "PlanoCartesiano" or (uis.TouchEnabled and not uis.MouseEnabled) then
+	if
+		vettyfolder.Tema.Value ~= "PlanoCartesiano"
+		or (UserInputService.TouchEnabled and not UserInputService.MouseEnabled)
+	then
 		return
 	end
 
 	local moveConnection
 
 	moveConnection = mouse.Move:Connect(function()
-		if value.AdentroJuego.Value == false then
+		if folderValue.AdentroJuego.Value == false then
 			moveConnection:Disconnect()
 		end
 
 		mouse.Icon = ""
-		if folderValue.Click.Value == true then
+		if guiValue.Click.Value == true then
 			if
 				objetoMover.Value ~= nil
 				and centroVector.Value ~= Vector3.zero
@@ -161,7 +161,7 @@ vettyfolder.Tema:GetPropertyChangedSignal("Value"):Connect(function()
 				and mouse.Target.Transparency == 0
 			then
 				objetoMover.Value.Position = mouse.Target.CFrame.Position
-				sd.sacarData()
+				registrarData.sacarData()
 
 				if objetoMover.Value.Name == "eje0" then
 					local posData = objetos.eje0.Value.Position - centroVector.Value
@@ -184,7 +184,7 @@ vettyfolder.Tema:GetPropertyChangedSignal("Value"):Connect(function()
 		mouseData.Visible = true
 
 		mouseData.Position = UDim2.fromScale(mouse.X / camViewport.X, mouse.Y / camViewport.Y)
-		if folderValue.Vista.Value == "Centro" then
+		if guiValue.Vista.Value == "Centro" then
 			mouseData.vector.Text = mouse.Target.CFrame.Position.X - centroVector.Value.X
 				.. ","
 				.. mouse.Target.CFrame.Position.Y - centroVector.Value.Y
@@ -240,18 +240,18 @@ anclarButton.MouseButton1Click:Connect(function()
 end)
 
 datosScrollingFrame.VistaDatos.TextButton.MouseButton1Click:Connect(function()
-	if folderValue.Vista.Value == "Centro" then
-		folderValue.Vista.Value = "Eje0"
+	if guiValue.Vista.Value == "Centro" then
+		guiValue.Vista.Value = "Eje0"
 	else
-		folderValue.Vista.Value = "Centro"
+		guiValue.Vista.Value = "Centro"
 	end
-	datosScrollingFrame.VistaDatos.TextButton.Text = folderValue.Vista.Value
+	datosScrollingFrame.VistaDatos.TextButton.Text = guiValue.Vista.Value
 end)
 
 local girandoEspera = false
 
 datosScrollingFrame.Giro:FindFirstChildOfClass("ImageButton").MouseButton1Click:Connect(function()
-	if girandoEspera == true then
+	if girandoEspera then
 		return
 	end
 	girandoEspera = true
@@ -271,31 +271,34 @@ datosScrollingFrame.Giro:FindFirstChildOfClass("ImageButton").MouseButton1Click:
 	local model = Instance.new("Model")
 	model.Parent = workspace
 
-	for i = 1, g do
-		local radianAngle
-		if str == "-" then
-			radianAngle = math.rad(rd - i)
-		else
-			radianAngle = math.rad(rd + i)
+	local tskDefer = task.defer(function()
+		for i = 1, g do
+			local radianAngle
+			if str == "-" then
+				radianAngle = math.rad(rd - i)
+			else
+				radianAngle = math.rad(rd + i)
+			end
+
+			local c = math.cos(radianAngle) * vr + objetos.eje0.Value.Position.X
+			local s = math.sin(radianAngle) * vr + objetos.eje0.Value.Position.Y
+
+			local part = Instance.new("Part")
+			part.Shape = "Ball"
+			part.Position = Vector3.new(c, s, objetos.Vertice.Value.Position.Z)
+			part.Color = Color3.fromRGB(38, 255, 0)
+			part.Anchored = true
+			part.CanTouch = false
+			part.CanCollide = false
+			part.CanQuery = false
+			part.CastShadow = false
+			part.Size = Vector3.new(1, 1, 0.2)
+			part.Parent = model
+			RunService.Heartbeat:Wait()
 		end
-
-		local c = math.cos(radianAngle) * vr + objetos.eje0.Value.Position.X
-		local s = math.sin(radianAngle) * vr + objetos.eje0.Value.Position.Y
-
-		local part = Instance.new("Part")
-		part.Shape = "Ball"
-		part.Position = Vector3.new(c, s, objetos.Vertice.Value.Position.Z)
-		part.Color = Color3.fromRGB(38, 255, 0)
-		part.Anchored = true
-		part.CanTouch = false
-		part.CanCollide = false
-		part.CanQuery = false
-		part.CastShadow = false
-		part.Size = Vector3.new(1, 1, 0.2)
-		part.Parent = model
-		RunService.Heartbeat:Wait()
-	end
-	task.wait(5)
+	end)
+	mouse.Button2Down:Wait()
 	model:Destroy()
+	task.cancel(tskDefer)
 	girandoEspera = false
 end)

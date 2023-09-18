@@ -1,5 +1,5 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local CollectionService = game:GetService("CollectionService")
 
 local moduleTween = require(ReplicatedStorage.Module.TweenMaster)
@@ -12,12 +12,12 @@ until Players.LocalPlayer
 local plr: Player = Players.LocalPlayer
 local plrGui: PlayerGui = plr:WaitForChild("PlayerGui")
 
-local cam: Camera = workspace.CurrentCamera
-
-local seleccionScreenGui = plrGui:WaitForChild("SeleccionExperimentos")
-
+local seleccionScreenGui: ScreenGui = plrGui:WaitForChild("SeleccionExperimentos")
 local experimentoGui: ScreenGui = plrGui:WaitForChild("Experimentos")
 
+local temaValue: StringValue = ReplicatedStorage.Value.ControlesVetty.Tema
+
+local cam: Camera = workspace.CurrentCamera
 cam.CameraType = Enum.CameraType.Scriptable
 cam.CFrame = workspace.Part.CFrame
 

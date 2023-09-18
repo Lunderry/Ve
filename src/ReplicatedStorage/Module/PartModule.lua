@@ -80,4 +80,5 @@ function module.giro(v1, eje, velocidad, pos)
 
 	return { math.cos(radianAngle) * vr + eje.Position.X, math.sin(radianAngle) * vr + eje.Position.Z }
 end
+
 return module

@@ -1,3 +1,5 @@
+--[[init conversion
+]]
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -5,23 +7,22 @@ local RunService = game:GetService("RunService")
 local modulePart = require(ReplicatedStorage.Module.PartModule)
 local moduleTween = require(ReplicatedStorage.Module.TweenMaster)
 local moduleConvertir = require(ReplicatedStorage.Module.ConversionUnidades)
-
 local dataUnidades = require(ReplicatedStorage.Module.ConversionUnidades.DataUnidades)
 
 repeat
 	task.wait(0.1)
 until Players.LocalPlayer
 
-local plr = Players.LocalPlayer
-local plrGui = plr.PlayerGui
+local plr: Player = Players.LocalPlayer
+local plrGui: PlayerGui = plr.PlayerGui
 
-local mouse = plr:GetMouse()
+local mouse: Mouse = plr:GetMouse()
 
-local conversionFolder = plrGui:WaitForChild("Experimentos").ConversionNumerosGui
-local selectorScrolling = conversionFolder.Selector.ScrollingFrame
-local jerarquiaScrolling = conversionFolder.Jerarrquia.ScrollingFrame
+local conversionGui: ScreenGui = plrGui:WaitForChild("Experimentos").ConversionUnidadesGui
+local selectorScrolling: ScrollingFrame = conversionGui.Selector.ScrollingFrame
+local jerarquiaScrolling: ScrollingFrame = conversionGui.Jerarrquia.ScrollingFrame
 
-local conversorFrame = conversionFolder.Conversor
+local conversorFrame: Frame = conversionGui.Conversor
 
 local parametroUnidades = {
 	["Numero"] = nil,
@@ -40,7 +41,7 @@ local nombreButton = ""
 local mouseBool = Instance.new("BoolValue")
 mouseBool.Name = "mouseBool"
 
-local function crearTextButton(nombre: string, orden: number)
+local function crearTextButton(nombre: string, orden: number, par)
 	if selectorScrolling:FindFirstChild(nombre) then
 		return
 	end
@@ -52,7 +53,7 @@ local function crearTextButton(nombre: string, orden: number)
 	TextButton.LayoutOrder = orden
 	TextButton.Name = nombre
 	TextButton.Text = nombre
-	TextButton.Parent = selectorScrolling
+	TextButton.Parent = if par then par else selectorScrolling
 
 	local UITextSizeConstraint = Instance.new("UITextSizeConstraint")
 	UITextSizeConstraint.MaxTextSize = 30
@@ -65,7 +66,7 @@ local function crearTextButton(nombre: string, orden: number)
 		end
 
 		if inp.UserInputType == Enum.UserInputType.MouseButton1 then
-			nombreButton = TextButton.Name
+			nombreButton = dataUnidades.Nombre[TextButton.Name]
 			mouseBool.Value = true
 		end
 	end)
@@ -85,7 +86,7 @@ local function convetirDatos()
 
 		conversorFrame.Resultado.Text = modulePart.Coma(text) .. parametroUnidades.Tipo[2]
 
-		for _, v in conversionFolder.Explicacion.ScrollingFrame:GetChildren() do
+		for _, v in conversionGui.Explicacion.ScrollingFrame:GetChildren() do
 			if v:IsA("Frame") then
 				v:Destroy()
 			end
@@ -101,7 +102,7 @@ local function convetirDatos()
 			explicacionFrame.Escritura.TextLabel.Text = seg[1]
 			explicacionFrame.Escritura.TextLabel.TextColor3 = seg[2]
 			explicacionFrame.Numero.Text = i
-			explicacionFrame.Parent = conversionFolder.Explicacion.ScrollingFrame
+			explicacionFrame.Parent = conversionGui.Explicacion.ScrollingFrame
 
 			if seg[2] == dataUnidades.Colores.Resultado or seg[2] == dataUnidades.Colores.Operaciones then
 				explicacionFrame.Size = UDim2.fromScale(1, 0.25)
@@ -114,15 +115,23 @@ local function convetirDatos()
 	end
 end
 
-local function crearJerarquia(nombre: string, valor: string, bool: boolean)
+local function crearJerarquia(nombre: string, color: Color3, valor: string, bool: boolean, layout: number)
 	local framePlantilla = ReplicatedStorage.Resource.JerarquiaPlantilla:Clone()
-	framePlantilla.Frame.Nombre.Text = nombre
-	framePlantilla.Frame.Valor.Text = "= " .. valor
-	framePlantilla.LayoutOrder = if bool then 40 else math.floor(valor)
+	if #nombre > 8 then
+		framePlantilla.Frame.Nombre.Text = nombre
+	else
+		framePlantilla.Frame.Nombre.Text = nombre .. " = " .. valor
+	end
+	framePlantilla.Frame.BackgroundColor3 = color
+	if layout then
+		framePlantilla.LayoutOrder = layout
+	else
+		framePlantilla.LayoutOrder = if bool then 40 else math.floor(valor)
+	end
 	framePlantilla.Parent = jerarquiaScrolling
 end
 
-for _, v in conversionFolder.CambioTipo.ScrollingFrame:GetChildren() do
+for _, v in conversionGui.CambioTipo.ScrollingFrame:GetChildren() do
 	if v:IsA("TextButton") then
 		v.MouseButton1Click:Connect(function()
 			parametroUnidades.Tipo = { nil, nil }
@@ -143,51 +152,99 @@ for _, v in conversionFolder.CambioTipo.ScrollingFrame:GetChildren() do
 						boton:Destroy()
 					end
 				end
+				for _, boton in conversionGui.SelectorVelocidad:GetDescendants() do
+					if boton:IsA("TextButton") then
+						boton:Destroy()
+					end
+				end
 				for _, cache: RBXScriptConnection in cacheTextButton do
 					cache:Disconnect()
 				end
 			end
-			local cont = 0
 
-			local framePlantilla = ReplicatedStorage.Resource.JerarquiaPlantilla:Clone()
-			framePlantilla.Frame.Nombre.Text = "Posicion de jerarquia de unidades"
-			framePlantilla.Frame.Valor:Destroy()
-			framePlantilla.Frame.Nombre.AnchorPoint = Vector2.new(0.5, 0.5)
-			framePlantilla.Frame.Nombre.Position = UDim2.fromScale(0.5, 0.5)
-			framePlantilla.Frame.BackgroundColor3 = Color3.fromRGB(225, 230, 200)
-			framePlantilla.LayoutOrder = 1
-			framePlantilla.Parent = jerarquiaScrolling
+			if table.find({ "Velocidad", "Aceleracion" }, v.Name) then
+				conversionGui.SelectorVelocidad.Visible = true
+				selectorScrolling.Visible = false
 
-			for nombre, valor in dataUnidades.Medicion[v.Name] do
-				if typeof(valor) == "table" then
-					local framePlantilla = ReplicatedStorage.Resource.JerarquiaPlantilla:Clone()
-					framePlantilla.Frame.Valor:Destroy()
-					framePlantilla.Frame.Nombre.Text = "Unidades no estándar"
-					framePlantilla.Frame.Nombre.AnchorPoint = Vector2.new(0.5, 0.5)
-					framePlantilla.Frame.Nombre.Position = UDim2.fromScale(0.5, 0.5)
-					framePlantilla.Frame.BackgroundColor3 = Color3.fromRGB(225, 230, 200)
-					framePlantilla.LayoutOrder = 39
-					framePlantilla.Parent = jerarquiaScrolling
+				local cont = 0
 
-					for especialNombre, q in valor do
-						crearJerarquia(especialNombre, if typeof(q) == "table" then q[1] else q, true)
+				for i = 1, 2 do
+					local turno = if i == 1
+						then "Longitud"
+						elseif v.Name == "Aceleracion" then "TiempoCuadrado"
+						else "Tiempo"
+
+					local pos = if i == 1 then "Longitud" else "Tiempo"
+
+					if i == 2 then
+						cont = 100000
+					end
+					crearJerarquia(
+						"Posicion de la jerarquia de unidades " .. turno,
+						Color3.fromRGB(255, 243, 156),
+						cont,
+						false
+					)
+
+					for nombre, valor in dataUnidades.Medicion[turno] do
+						if type(valor) == "table" then
+							continue
+						end
+
+						crearJerarquia(nombre, Color3.fromRGB(255, 255, 255), valor, false, valor + cont)
+						crearTextButton(dataUnidades.Nombre[nombre], valor, conversionGui.SelectorVelocidad[pos])
+					end
+					crearJerarquia("Unidades no estándar", Color3.fromRGB(255, 243, 156), 39 + cont, false)
+
+					for especialNombre, q in dataUnidades.Medicion[turno].Especial do
+						crearJerarquia(
+							especialNombre,
+							Color3.fromRGB(255, 255, 255),
+							if type(q) == "table" then q[1] else q,
+							true,
+							(if type(q) == "table" then q[1] else q) + 40 + cont
+						)
 						crearTextButton(
 							dataUnidades.Nombre[especialNombre],
-							if typeof(q) == "table" then math.abs(q[1]) + 40 else math.abs(q) + 40
+							(if type(q) == "table" then math.abs(q[1]) else math.abs(q)) + 40,
+							conversionGui.SelectorVelocidad[pos]
 						)
+						cont += 1
 					end
-				else
-					crearJerarquia(nombre, valor, false)
-					crearTextButton(dataUnidades.Nombre[nombre], valor)
 				end
-				cont += 1
+			else
+				conversionGui.SelectorVelocidad.Visible = false
+				selectorScrolling.Visible = true
+
+				crearJerarquia("Posicion de la jerarquia de unidades", Color3.fromRGB(255, 243, 156), 1, false)
+				for nombre, valor in dataUnidades.Medicion[v.Name] do
+					if typeof(valor) == "table" then
+						crearJerarquia("Unidades no estándar", Color3.fromRGB(255, 243, 156), 39, false)
+
+						for especialNombre, q in valor do
+							crearJerarquia(
+								especialNombre,
+								Color3.fromRGB(255, 255, 255),
+								if typeof(q) == "table" then q[1] else q,
+								true
+							)
+							crearTextButton(
+								dataUnidades.Nombre[especialNombre],
+								if typeof(q) == "table" then math.abs(q[1]) + 40 else math.abs(q) + 40
+							)
+						end
+					else
+						crearJerarquia(nombre, Color3.fromRGB(255, 255, 255), valor, false)
+						crearTextButton(dataUnidades.Nombre[nombre], valor)
+					end
+				end
 			end
 		end)
 	end
 end
 
 local paramConnection = {}
-local adentro = ""
+local adentroNombre = ""
 
 mouseBool:GetPropertyChangedSignal("Value"):Connect(function()
 	if mouseBool.Value == true then
@@ -212,18 +269,19 @@ mouseBool:GetPropertyChangedSignal("Value"):Connect(function()
 		UIStroke.Parent = movibleTextButton
 		UICorner.Parent = movibleTextButton
 		UIAspectRatioConstraint.Parent = movibleTextButton
-		movibleTextButton.Parent = conversionFolder
+
+		movibleTextButton.Parent = conversionGui
 
 		for _, v: TextButton in { conversorFrame.UnidadInicio, conversorFrame.UnidadConversor } do
 			paramConnection[#paramConnection + 1] = v.MouseEnter:Connect(function()
-				adentro = v.Name
+				adentroNombre = v.Name
 				moduleTween:FastTween(
 					UICorner,
 					{ Enum.EasingStyle.Quart, Enum.EasingDirection.Out, 0.1, { CornerRadius = UDim.new(0.3, 0) } }
 				)
 			end)
 			paramConnection[#paramConnection + 1] = v.MouseLeave:Connect(function()
-				adentro = ""
+				adentroNombre = ""
 				moduleTween:FastTween(
 					UICorner,
 					{ Enum.EasingStyle.Quart, Enum.EasingDirection.Out, 0.1, { CornerRadius = UDim.new(0, 0) } }
@@ -235,16 +293,42 @@ mouseBool:GetPropertyChangedSignal("Value"):Connect(function()
 			movibleTextButton.Position = UDim2.fromOffset(mouse.X, mouse.Y)
 		end)
 	else
-		if adentro ~= "" then
-			if #nombreButton > 3 then
-				nombreButton = dataUnidades.Nombre[nombreButton]
+		if adentroNombre ~= "" then
+			local textOr = conversorFrame[adentroNombre]
+
+			if
+				(dataUnidades.Medicion.Longitud[textOr.Text] or dataUnidades.Medicion.Longitud.Especial[textOr.Text])
+				and (
+					dataUnidades.Medicion.Tiempo[nombreButton]
+					or dataUnidades.Medicion.TiempoCuadrado[nombreButton]
+					or dataUnidades.Medicion.Tiempo.Especial[nombreButton]
+					or dataUnidades.Medicion.TiempoCuadrado.Especial[nombreButton]
+				)
+			then
+				nombreButton = textOr.Text .. "/" .. nombreButton
+			elseif
+				(
+					dataUnidades.Medicion.Tiempo[textOr.Text]
+					or dataUnidades.Medicion.TiempoCuadrado[textOr.Text]
+					or dataUnidades.Medicion.Tiempo.Especial[textOr.Text]
+					or dataUnidades.Medicion.TiempoCuadrado.Especial[textOr.Text]
+				)
+				and (
+					dataUnidades.Medicion.Longitud[nombreButton]
+					or dataUnidades.Medicion.Longitud.Especial[nombreButton]
+				)
+			then
+				nombreButton = nombreButton .. "/" .. textOr.Text
+			else
+				nombreButton = nombreButton
 			end
-			parametroUnidades.Tipo[referenciaParametro[adentro]] = nombreButton
-			conversorFrame[adentro].Text = nombreButton
+			parametroUnidades.Tipo[referenciaParametro[adentroNombre]] = nombreButton
+			textOr.Text = nombreButton
+
 			convetirDatos()
 		end
 
-		adentro = ""
+		adentroNombre = ""
 		nombreButton = ""
 		movibleTextButton:Destroy()
 		for _, v: RBXScriptConnection in paramConnection do
@@ -253,11 +337,9 @@ mouseBool:GetPropertyChangedSignal("Value"):Connect(function()
 	end
 end)
 
---Poner el valor a nil en los frame
-
 for _, v: TextButton in { conversorFrame.UnidadInicio, conversorFrame.UnidadConversor } do
 	v.MouseButton1Click:Connect(function()
-		if parametroUnidades.Tipo[referenciaParametro[v.Name]] ~= nil and adentro == "" then
+		if parametroUnidades.Tipo[referenciaParametro[v.Name]] ~= nil and adentroNombre == "" then
 			parametroUnidades.Tipo[referenciaParametro[v.Name]] = nil
 			v.Text = ""
 		end

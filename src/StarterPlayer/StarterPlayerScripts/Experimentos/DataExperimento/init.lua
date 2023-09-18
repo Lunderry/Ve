@@ -2,10 +2,9 @@ local posOriginal = {}
 
 for _, v in workspace:GetChildren() do
 	if v:IsA("Folder") and v:FindFirstChild("Folder") and v.Folder:FindFirstChild("Mov") then
-		local nivel = v.default.Nivel.Value
 		local mov = v.Folder.Mov.Position
 
-		posOriginal[nivel] = {
+		posOriginal[v.Nivel.Value] = {
 			["X"] = mov.X,
 			["Y"] = mov.Y,
 			["Z"] = mov.Z,
@@ -20,14 +19,14 @@ local Data = {
 	["MovimientoRectilinio"] = {
 		["Nombre"] = "MovimientoRectilinio",
 
-		["Funcion"] = function(a, vi, v, t, EleccionBasta: string)
-			local d = 0
+		["Funcion"] = function(a, vi, t, EleccionBasta: string)
+			local d
 
 			--a = (v - vi) / t
 			--t = (v - vi) / a
 			-- 	a = (v - vi) / t
 
-			if EleccionBasta == "Contador" or EleccionBasta == "CambioTiempo" then
+			if table.find({ "Contador", "CambioTiempo" }, EleccionBasta) then
 				if a == 0 then
 					v = d / t
 					d = vi * t
@@ -38,24 +37,24 @@ local Data = {
 			end
 
 			return {
-				["Aceleracion"] = a,
 				["Velocidad"] = v,
-				["VelocidadInicial"] = vi,
 				["Distancia"] = d,
 			}
 		end,
-		["Calculos"] = function()
+		["Calculos"] = function(a, vi)
+			-- buen calculos
 			return {
-				["TiempoMaximo"] = tonumber("inf"),
+				["TiempoMaximo"] = if a < 0 then -vi / a else tonumber("inf"),
 			}
 		end,
 		["Sumar"] = function(Resultado)
 			return Vector3.new(posOriginal[3].X, posOriginal[3].Y, posOriginal[3].Z + Resultado.Distancia)
 		end,
-		["PonerCalculo"] = {},
-		["PonerFuncion"] = { "Aceleracion", "VelocidadInicial", "Velocidad", "Tiempo" },
+		["PonerCalculo"] = { "Aceleracion", "VelocidadInicial" },
+		["PonerFuncion"] = { "Aceleracion", "VelocidadInicial", "Tiempo" },
 		["Propiedades"] = { "Aceleracion", "VelocidadInicial", "Velocidad", "Tiempo" },
-		["Conversion"] = {},
+		["Conversion"] = { "Aceleracion", { "VelocidadInicial", "Velocidad" }, "Tiempo " },
+		--Si son "especiales se pone dentro de una tabla y se cuenta el segundo valor
 		["ListaBlanca"] = {
 			["Basta"] = {},
 			["Opccional"] = {
@@ -73,8 +72,7 @@ local Data = {
 		["Funcion"] = function(g, h, t, EleccionBasta: string)
 			local vf = 0
 
-			--
-			if EleccionBasta == "Contador" or EleccionBasta == "CambioTiempo" or EleccionBasta == "Tiempo" then
+			if table.find({ "Contador", "CambioTiempo", "Tiempo" }, EleccionBasta) then
 				vf = (g * t)
 				h = ((g * (t ^ 2)) / 2)
 				-- t = math.sqrt((2 * h) / g)
@@ -87,10 +85,9 @@ local Data = {
 		end,
 		["Calculos"] = function(g, h)
 			local tiempoFinal = math.sqrt((2 * h) / g)
-			local alturaRecorrido = g * ((tiempoFinal ^ 2) / 2)
 
 			return {
-				["AlturaRecorrido"] = alturaRecorrido,
+				["AlturaRecorrido"] = g * ((tiempoFinal ^ 2) / 2),
 				["TiempoMaximo"] = tiempoFinal,
 			}
 		end,
@@ -107,7 +104,13 @@ local Data = {
 		["PonerCalculo"] = { "Gravedad", "Altura" },
 		["PonerFuncion"] = { "Gravedad", "Altura", "Tiempo" },
 		["Propiedades"] = { "Gravedad", "Altura", "Tiempo", "VelocidadFinal" },
-		["Conversion"] = {}, --"Tiempo", "Altura"
+		["Conversion"] = {
+			{ "Gravedad", "Aceleracion" },
+			{ "Altura", "Longitud" },
+			"Tiempo",
+			{ "VelocidadInicial", "Velocidad" },
+		},
+
 		["ListaBlanca"] = {
 			"Gravedad",
 			["Basta"] = {
@@ -129,7 +132,7 @@ local Data = {
 		["Funcion"] = function(g, t, vi, v, EleccionBasta: string)
 			local h
 
-			if EleccionBasta == "Contador" or EleccionBasta == "CambioTiempo" then
+			if table.find({ "Contador", "CambioTiempo" }, EleccionBasta) then
 				h = (vi * t) - (0.5 * g) * (t ^ 2)
 				v = vi - (g * t)
 			elseif EleccionBasta == "Tiempo" then
@@ -163,8 +166,8 @@ local Data = {
 
 			if Resultado["Altura"] < 0 then
 				return Vector3.new(posOriginal[5].X, posOriginal[5].Y, posOriginal[5].Z)
-			elseif Resultado["Altura"] > 5000 then
-				return Vector3.new(posOriginal[5].X, 5000, posOriginal[5].Z)
+			elseif Resultado["Altura"] > 10000 then
+				return Vector3.new(posOriginal[5].X, 10000, posOriginal[5].Z)
 			else
 				return Vector3.new(posOriginal[5].X, posOriginal[5].Y + Resultado["Altura"], posOriginal[5].Z)
 			end
@@ -172,7 +175,14 @@ local Data = {
 		["PonerCalculo"] = { "Gravedad", "VelocidadInicial" },
 		["PonerFuncion"] = { "Gravedad", "Tiempo", "VelocidadInicial", "Velocidad" },
 		["Propiedades"] = { "Gravedad", "Altura", "Tiempo", "VelocidadInicial", "Velocidad" },
-		["Conversion"] = {}, -- "Tiempo"
+		["Conversion"] = {
+			{ "Gravedad", "Aceleracion" },
+			{ "Altura", "Longitud" },
+			"Tiempo",
+			{ "VelocidadInicial", "Velocidad" },
+			"Velocidad",
+		},
+
 		["ListaBlanca"] = {
 			"Gravedad",
 
@@ -200,8 +210,8 @@ local Data = {
 			local x = vx * t
 			local y = (vy * t) - (0.5 * g * t ^ 2)
 
-			if EleccionBasta == "Contador" or EleccionBasta == "CambioTiempo" then
-				pos = Vector3.new(posOriginal[6].X, y, x)
+			if table.find({ "Contador", "CambioTiempo" }, EleccionBasta) then
+				pos = Vector3.new(posOriginal[6].X, y, -x)
 			elseif EleccionBasta == "Tiempo" then
 				vi = math.sqrt((-0.5 * g * t) ^ 2 / math.sin(graRad) ^ 2)
 			elseif EleccionBasta == "Distancia" then
@@ -210,10 +220,12 @@ local Data = {
 
 			return {
 				["VelocidadInicial"] = vi,
-				["Velocidad"] = tostring(vx) .. "X" .. " " .. tostring(vy - (g * t)) .. "Y",
+				["VelocidadX"] = vx,
+				["VelocidadY"] = vy - (g * t),
+				["PosicionX"] = x,
+				["PosicionY"] = y,
 				["Tiempo"] = t,
 				["Posicion"] = pos,
-				["PosicionXY"] = tostring(x) .. "X " .. tostring(y) .. "Y",
 			}
 		end,
 		["Calculos"] = function(g, gra, vi)
@@ -222,7 +234,6 @@ local Data = {
 			local vy = vi * math.sin(angulo)
 
 			local tb = {
-				["VelocidadXY"] = vi,
 				["TiempoSubida"] = math.abs(vy / g),
 				["AlturaMaxima"] = math.pow(vy, 2) / (2 * g),
 				["TiempoMaximo"] = math.abs((2 * vy) / g),
@@ -236,7 +247,12 @@ local Data = {
 		["PonerCalculo"] = { "Gravedad", "Grados", "VelocidadInicial" },
 		["PonerFuncion"] = { "Gravedad", "Tiempo", "VelocidadInicial", "Grados", "Distancia" },
 		["Propiedades"] = { "Gravedad", "Grados", "Posicion", "Tiempo", "VelocidadInicial", "Distancia" },
-		["Conversion"] = {},
+		["Conversion"] = {
+			{ "Gravedad", "Aceleracion" },
+			"Tiempo",
+			{ "VelocidadInicial", "Velocidad" },
+			{ "Distancia", "Longitud" },
+		},
 		["ListaBlanca"] = {
 			"Gravedad",
 			"Grados",
@@ -251,7 +267,7 @@ local Data = {
 		["Limitante"] = {
 			["Tiempo"] = { 0, nil },
 			["VelocidadInicial"] = { 0, nil },
-			["Grados"] = { 0, 89.99 },
+			["Grados"] = { 0, 180 },
 			["Distancia"] = { 0, nil },
 			["Gravedad"] = { 0, nil },
 		},

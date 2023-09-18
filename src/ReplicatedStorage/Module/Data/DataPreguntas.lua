@@ -1,858 +1,322 @@
 local module = {
-	["Español"] = {
-		["Tutorial"] = {
-			["Tutorial1"] = {
-				{ "Es la primera vez que te veo", "Saludando" },
-				{ "Primero que todo bienvenido al juego", "Listo" },
-				{ "Que bueno que te animaste a aprender sobre fisica", "Lentes" },
-				{ "Yo soy Vetty, te ayudare sobre el aprendizaje de fisica", "Dato" },
-			},
-			["Tutorial2"] = {
-				{ "Abajo a la izquierda veras mi icono, solo tendras que darle click para ayudarte", "Dato" },
-			},
+	["Tutorial"] = {
+		["Tutorial1"] = {
+			{ "Es la primera vez que te veo", "Saludando" },
+			{ "Primero que todo bienvenido al juego", "Listo" },
+			{ "Que bueno que te animaste a aprender sobre fisica", "Lentes" },
+			{ "Yo soy Vetty, te ayudare sobre el aprendizaje de fisica", "Dato" },
 		},
-
-		["Base"] = {
-			{ "¿Que deseas?", "Saludando" },
-		},
-		["Despedida"] = {
-			{ "Adios aqui estare esperando", "Saludando" },
-		},
-
-		--Sin eleccion
-		[""] = {},
-		["ConversionNumeros"] = {
-			["Conversiones"] = {
-				["Conversion de Longitud"] = {
-					{ "Primero tenemos que tener un orden de posición, que sería.", "Saludando" },
-					{ "1 = mm, \n2 = cm, \n3 = dm, \n4 = m \n5 = dam \n6 = hm \n7 = km", "Lentes" },
-					{
-						"Un ejemplo: \n Si el primer número es 20 milímetros (mm) y tenemos que convertirlo a metros (m), lo que tenemos que hacer es usando la tabla anterior una resta entre 4 - 1, donde el 4 significa que es (m)y el 1 que seria (mm).",
-						"Escribiendo",
-					},
-					{ "En este caso nos da 3, ahora tenemos que dividir 20mm entre 1,000", "Dato" },
-					{
-						"El “1,000” sale agregando ceros con el resultado que nos dio, como en este caso fueron 3, se agregan 3 ceros al número divisor. Si fuera de milimetros a centimetros, nada más se agregaría un cero)",
-						"Escribiendo",
-					},
-					{
-						"para dar el resultado tendríamos que dividir 20mm entre 1,000 para que nos da .02 m",
-						"Listo",
-					},
-					{
-						"Pero si queremos hacerlo de manera inversa tenemos que hacer el mismo procedimiento solo que ahora sería multiplicando y restando al revés, en vez de (mm - m) a (m - mm)",
-						"Escribiendo",
-					},
-				},
-				["Conversion de Masa"] = {
-					{ "Primero tenemos que tener un orden de posición, que sería el siguiente.", "Dato" },
-
-					{ "1 = mg\n2 = cg\n3 = dg\n4 = g\n5 = dag\n6 = hg\n7 = kg", "Normal" },
-					{
-						"Un ejemplo: \nSi el primer número es  10 gramos (g) y tenemos que convertirlo a metros (kg), lo que tenemos que hacer es usando la tabla anterior una resta entre 7 - 4 , donde el 7 significa que es kilogramos y el 4 que sería gramos.",
-						"Saludando",
-					},
-					{ "En este caso nos da 3, ahora tenemos que dividir 10g entre 1,000", "Lentes" },
-					{
-						"El “1,000” sale agregando ceros con el resultado que nos dio, como en este caso fueron 3, se agregan 3 ceros al número divisor. Si fuera de hectogramos a kilogramos, nada más se agregaría un cero",
-						"Escribiendo",
-					},
-					{
-						"Para dar el resultado tendríamos que dividir 10g entre 1,000.\nEl resultado es de .02 gramos.",
-						"Listo",
-					},
-					{
-						"Pero si queremos hacerlo de manera inversa tenemos que hacer el mismo procedimiento solo que ahora sería multiplicando y restando al revés, en vez de (g - kg) a (kg - g)",
-						"Normal",
-					},
-				},
-				["Conversion de Temperatura"] = {
-					{ "Primero tenemos que ver que significa cada Temperatura", "Dato" },
-					{
-						"f = Fahrenheit \nk = Kelvins \nc = Celsius",
-						"Lentes",
-					},
-					{
-						"Kelvins:\n\nKelvins a Fahrenheit \nf = (k - 273.15) * 1.8 + 32\nKelvins a Celsius\n c = k - 273.15",
-						"Escribiendo",
-					},
-					{
-						"Celsius:\n\nCelsius a Kelvins k = c + 273.15\nCelsius a Fahrenheit\nf = (c * 1.8) + 32",
-						"Escribiendo",
-					},
-					{
-						"Fahrenheit:\n\nFahrenheit a Kelvins\nk = (f - 32) * 1.8 + 273.15\nFahrenheit  a Celsius\nc = (f - 32) * 1.8",
-						"Escribiendo",
-					},
-				},
-				["Conversion de Tiempo"] = {
-					{
-						"De segundos a minutos:\n\nDivide la cantidad de segundos entre 60 para obtener los minutos. El residuo serán los segundos restantes.",
-						"Listo",
-					},
-					{ "Minutos = Segundos / 60 Segundos restantes = Segundos % 60", "Escribiendo" },
-
-					{
-						"De minutos a horas:\n\nDivide la cantidad de minutos entre 60 para obtener las horas. El residuo serán los minutos restantes.",
-						"Dato",
-					},
-					{ "Horas = Minutos / 60 Minutos restantes = Minutos % 60", "Escribiendo" },
-				},
-				["Conversion Cuadrado/Cubico"] = {
-					{
-						"Usando el ejemplo de Longitud pero en caso del Cuadrado multiplicando por 20\n y por 30 usando el Cubico",
-						"Dato",
-					},
-				},
-			},
-			["Tutorial"] = {
-				["¿Como sirve?"] = {
-					{ "En la parte de arriba tienes diferentes tipos de numeros para convertir", "Saludando" },
-					{
-						"y a su lado izquierdo saldra diferentes tipos de medidas dependiendo que tipo uso",
-						"Dato",
-					},
-					{ "al dar click lo podra seleccionar para ponerlo en uno de los 2 cuadros grises", "Listo" },
-					{
-						"el cuadro gris de arriba es el numero que quiere convertir y el de abajo es a que se va a convertir",
-						"Pensando",
-					},
-					{ "ya al tener esto puede poner los datos en el recuadro blanco de la parte arriba", "Saludando" },
-				},
-				["Datos"] = {
-					["¿Para que sirve convertir numeros?"] = {
-						{ "En muchas cosas", "Saludando" },
-						{ "Aqui una lista de lo que sirve", "Dato" },
-						{
-							"Presentación de datos, Cálculos y comparaciones, Interacción con sistemas externos, Optimización de rendimiento, etc.",
-							"Escribiendo",
-						},
-					},
-				},
-			},
-		},
-		["PlanoCartesiano"] = {
-			["Operaciones"] = {
-				["¿Como puedo saber la distancia entre dos puntos?"] = {
-					{ "Tienes que tener la posición de ambos puntos", "Dato" },
-					{ "Las restas sus lados ejem:\n\n x2 - x1, donde su número es su respectivo punto ", "Saludando" },
-					{ "x2 sería el eje y x1 el punto.", "Listo" },
-					{ "Y le pones un potencial al cuadrado quedaría:\n (x2 - x1)²", "Pensando" },
-					{ "Hacemos lo mismo con su posición Y (y2 - y1)²", "Saludando" },
-					{ "Ahora lo sumamos x + y", "Dato" },
-					{ "Y por último le sacamos el raíz √", "Escribiendo" },
-				},
-				["¿Como puedo saber cuantos grados tiene?"] = {
-					{
-						"Tienes que restar (x2 - x1) y (y2 - y1) donde el 2 es el eje y el 1 el punto",
-						"Dato",
-					},
-					{
-						"Ahora usando tangente(y/x) y con el resultado ver dependiendo de la posicion si es positivo o negativo",
-						"Saludando",
-					},
-				},
-				["¿Como se que tipo de angulo tiene un plano?"] = {
-					{
-						'Si el punto se encuentra a la derecha del eje en un ángulo "Nulo / Completo" dependiendo del contexto',
-						"Saludando",
-					},
-					{
-						'"Nulo" si solo esta en el principio del Plano Cartesiano, "Completo" si ya dio la vuelta completa',
-						"Dato",
-					},
-					{
-						'Si el punto se encuentra antes de los 90° y después de 0° será un ángulo "Agudo"',
-						"Listo",
-					},
-					{
-						'Si el punto está arriba del eje que sería lo mismo a 90° será un ángulo "Recto"',
-						"Normal",
-					},
-
-					{
-						'Si el punto está después de los 90° y antes de 180° es un ángulo "Obtuso',
-						"Escribiendo",
-					},
-					{
-						'Si el punto se encuentra a la izquierda que seria lo mismo a 180° seria un ángulo "Llano"',
-						"Listo",
-					},
-					{
-						'Si los grados es mayor a 180° y menor a 360° seria un ángulo "Cóncavo"',
-						"Saludando",
-					},
-				},
-			},
-		},
-		["MovimientoRectilinio"] = {
-			["Operaciones"] = {
-				["Sacar datos con solo Velocidad Inicial"] = {
-					{ "Datos para las formulas", "Saludando" },
-					{ "d = Distancia\nvi = Velocidad Inicial\nt = Tiempo ", "Dato" },
-					{ "d = vit", "Escribiendo" },
-				},
-				["Sacar datos con Aceleración"] = {
-					{ "Datos para las formulas", "Saludando" },
-					{ "d = Distancia\nvi = Velocidad Inicial\nt = Tiempo\na = Aceleracion", "Escribiendo" },
-					{ "d = vit + .5at²", "Dato" },
-					{ "v = vi + at", "Saludando" },
-					{ "(Si no se tiene Velocidad Inicial se usa el numero 0)", "Listo" },
-				},
-			},
-			["General Movimiento"] = {
-				["¿Cómo funciona la interfaz?"] = {
-					{
-						"A tu izquierda tienes las configuraciones para que el sistema sepa qué propiedades quieres que tenga",
-						"Listo",
-					},
-					{
-						"A un lado tienes botones, el primero sirve para iniciar el objeto a un lado su botón de pausa",
-						"Dato",
-					},
-					{
-						"Tienes flechas donde te indica que velocidad quieres que tenga el tiempo de ejecución",
-						"Escribiendo",
-					},
-					{
-						'Y por ultimo a tu derecha datos sobre ese mismo mecanismo, datos como "Tiempo Máximo"',
-						"Normal",
-					},
-				},
-				["¿Cuales son los tipos de Configuraciones?"] = {
-					{ "Existen tres tipos de configuraciones", "Dato" },
-					{
-						'El "Primero" son datos que tienes que ponerlas sin ninguna excepción',
-						"Saludando",
-					},
-					{ 'El "Secundario" tienes que elegir entre sus opciones para elegir solo uno', "Dato" },
-					{ 'El "Terciario" son datos opcionales  que no son vitales para el funcionamiento', "Saludando" },
-				},
-				["¿Cómo puedo cambiar el tiempo?"] = {
-					{
-						"Tienes que dar pausa y en los datos del experimento puedes mover su tiempo al que tu quieras",
-						"Listo",
-					},
-				},
-			},
-		},
-		-- {"", "Saludando"},
-		--\n
-
-		["CaidaLibre"] = {
-			["Operaciones"] = {
-				["Sacar datos de movimiento"] = {
-					{
-						"Los datos de movimiento son los que se generan mediante el movimiento del objeto.",
-						"Saludando",
-					},
-					{ "Datos importantes.", "Dato" },
-					{ "v = Velocidad\nh = Altura\nt = Tiempo", "Escribiendo" },
-					{ "Datos extras serían:\ng = Gravedad", "Saludando" },
-					{ "t = √2h / g", "Dato" },
-					{ "v = gt", "Dato" },
-					{ "h = gt² / 2", "Dato" },
-				},
-				["Sacar datos de como se moverá"] = {
-					{ 'Estos datos predicen alguno datos como "TiempoMaximo" o/y "TiempoSubida"', "Saludando" },
-					{ "Datos para las formulas", "Saludando" },
-					{ "g = Gravedad\n h = Altura", "Dato" },
-					{ "TiempoFinal = √2h / g", "Dato" },
-					{ "AlturaRecorrer = gTf² / 2\n(TiempoFinal = Tf)", "Dato" },
-				},
-			},
-			["General Movimiento"] = {
-				["¿Cómo funciona la interfaz?"] = {
-					{
-						"A tu izquierda tienes las configuraciones para que el sistema sepa qué propiedades quieres que tenga",
-						"Listo",
-					},
-					{
-						"A un lado tienes botones, el primero sirve para iniciar el objeto a un lado su botón de pausa",
-						"Dato",
-					},
-					{
-						"Tienes flechas donde te indica que velocidad quieres que tenga el tiempo de ejecución",
-						"Escribiendo",
-					},
-					{
-						'Y por ultimo a tu derecha datos sobre ese mismo mecanismo, datos como "Tiempo Máximo"',
-						"Normal",
-					},
-				},
-				["¿Cuales son los tipos de Configuraciones?"] = {
-					{ "Existen tres tipos de configuraciones", "Dato" },
-					{
-						'El "Primero" son datos que tienes que ponerlas sin ninguna excepción',
-						"Saludando",
-					},
-					{ 'El "Secundario" tienes que elegir entre sus opciones para elegir solo uno', "Dato" },
-					{ 'El "Terciario" son datos opcionales  que no son vitales para el funcionamiento', "Saludando" },
-				},
-				["¿Cómo puedo cambiar el tiempo?"] = {
-					{
-						"Tienes que dar pausa y en los datos del experimento puedes mover su tiempo al que tu quieras",
-						"Listo",
-					},
-				},
-			},
-		},
-		["TiroVertical"] = {
-			["Operaciones"] = {
-				["Sacar datos de movimiento"] = {
-					{
-						"Los datos de movimiento son los que se generan mediante el movimiento del objeto.",
-						"Saludando",
-					},
-					{ "Datos para las formulas", "Saludando" },
-
-					{ "g = Gravedad\nt = Tiempo\nvi = Velocidad Inicial\nv = Velocidad\nh = Altura", "Saludando" },
-					{ "Altura = vit - (0.5 * g) * t²\n\nAltura = v² - vi² / (2 * -g)", "Dato" },
-					{ "Tiempo = vi - v / g", "Listo" },
-					{ "Velocidad = vi - gt", "Dato" },
-				},
-				["Sacar datos de como se movera"] = {
-					{ 'Estos datos predicen como alguno datos como "TiempoMaximo" o/y "TiempoSubida".', "Saludando" },
-					{ "Datos para las formulas", "Saludando" },
-					{ "g = Gravedad\nvi = Velocidad Inicial", "Saludando" },
-					{ "TiempoSubida = vi/g", "Dato" },
-					{ "TiempoMaximo = TiempoSubida * 2", "Dato" },
-					{ "AlturaMaxima = vi²/2g", "Listo" },
-					{ "VelocidadFinal = vi - gvi/g *2 ", "Dato" },
-				},
-			},
-			["General Movimiento"] = {
-				["¿Cómo funciona la interfaz?"] = {
-					{
-						"A tu izquierda tienes las configuraciones para que el sistema sepa qué propiedades quieres que tenga",
-						"Listo",
-					},
-					{
-						"A un lado tienes botones, el primero sirve para iniciar el objeto a un lado su botón de pausa",
-						"Dato",
-					},
-					{
-						"Tienes flechas donde te indica que velocidad quieres que tenga el tiempo de ejecución",
-						"Escribiendo",
-					},
-					{
-						'Y por ultimo a tu derecha datos sobre ese mismo mecanismo, datos como "Tiempo Máximo"',
-						"Normal",
-					},
-				},
-				["¿Cuales son los tipos de Configuraciones?"] = {
-					{ "Existen tres tipos de configuraciones", "Dato" },
-					{
-						'El "Primero" son datos que tienes que ponerlas sin ninguna excepción',
-						"Saludando",
-					},
-					{ 'El "Secundario" tienes que elegir entre sus opciones para elegir solo uno', "Dato" },
-					{ 'El "Terciario" son datos opcionales  que no son vitales para el funcionamiento', "Saludando" },
-				},
-				["¿Cómo puedo cambiar el tiempo?"] = {
-					{
-						"Tienes que dar pausa y en los datos del experimento puedes mover su tiempo al que tu quieras",
-						"Listo",
-					},
-				},
-			},
-		},
-		["TiroParabolico"] = {
-			["Operaciones"] = {
-				["Sacar datos de movimiento"] = {
-					{ "Los datos de movimiento son los que se generan mediante el movimiento del objeto", "Saludando" },
-					{ "Datos para las formulas", "Normal" },
-					{ "g = Gravedad\nt = Tiempo\nvi = VelocidadInicial\ngra = Grados\ndis = Distancia", "Saludando" },
-					{
-						"Velocidad Horizontal (vx) = vi * cos(gra), ,\nVelocidad Vertical (vy) = vi * sin(gra),\n (Todos los calculos fueron hechos con radianes.) (vy)",
-						"Escribiendo",
-					},
-					{ "Posicion Horizontal = vxt", "Listo" },
-					{ "Posicion Vertical = vyt - .5gt²", "Dato" },
-					{ "VelocidadInicial = √(-.5gt)² / sin(gra)²", "Listo" },
-					{ "VelocidadInicial = √dis * g/ sin(2 * gra)", "Dato" },
-				},
-				["Sacar datos de como se movera"] = {
-					{ 'Estos datos predicen como alguno datos como "TiempoMaximo" o/y "TiempoSubida"', "Normal" },
-					{ "Datos para las formulas", "Saludando" },
-					{ "g = Gravedad\ngra = Grados\nvi = VelocidadInicial", "Escribiendo" },
-					{
-						"Velocidad Horizontal (vx) = vi * cos(gra),\nVelocidad Vertical (vy) = vi * sin(gra),\n (Todos los calculos fueron hechos con radianes.)",
-						"Escribiendo",
-					},
-					{ "TiempoSubida = vy/g", "Dato" },
-					{ "AlturaMaxima = vy²/2g", "Listo" },
-					{ "TiempoMaximo = 2vy / g", "Dato" },
-					{ "AlcanceHorizontal = vx(vy/2g)", "Listo" },
-				},
-			},
-			["General Movimiento"] = {
-				["¿Cómo funciona la interfaz?"] = {
-					{
-						"A tu izquierda tienes las configuraciones para que el sistema sepa qué propiedades quieres que tenga",
-						"Listo",
-					},
-					{
-						"A un lado tienes botones, el primero sirve para iniciar el objeto a un lado su botón de pausa",
-						"Dato",
-					},
-					{
-						"Tienes flechas donde te indica que velocidad quieres que tenga el tiempo de ejecución",
-						"Escribiendo",
-					},
-					{
-						'Y por ultimo a tu derecha datos sobre ese mismo mecanismo, datos como "Tiempo Máximo"',
-						"Normal",
-					},
-				},
-				["¿Cuales son los tipos de Configuraciones?"] = {
-					{ "Existen tres tipos de configuraciones", "Dato" },
-					{
-						'El "Primero" son datos que tienes que ponerlas sin ninguna excepción',
-						"Saludando",
-					},
-					{ 'El "Secundario" tienes que elegir entre sus opciones para elegir solo uno', "Dato" },
-					{ 'El "Terciario" son datos opcionales  que no son vitales para el funcionamiento', "Saludando" },
-				},
-				["¿Cómo puedo cambiar el tiempo?"] = {
-					{
-						"Tienes que dar pausa y en los datos del experimento puedes mover su tiempo al que tu quieras",
-						"Listo",
-					},
-				},
-			},
+		["Tutorial2"] = {
+			{ "Abajo a la izquierda veras mi icono, solo tendras que darle click para ayudarte", "Dato" },
 		},
 	},
-	["Ingles"] = {
-		["Tutorial"] = {
-			["Tutorial1"] = {
-				{ "Es la primera vez que te veo", "Saludando" },
-				{ "Primero que todo bienvenido al juego", "Listo" },
-				{ "Que bueno que te animaste a aprender sobre fisica", "Lentes" },
-				{ "Yo soy Vetty, te ayudare sobre el aprendizaje de fisica", "Dato" },
-			},
-			["Tutorial2"] = {
-				{ "Abajo a la izquierda veras mi icono, solo tendras que darle click para ayudarte", "Dato" },
-			},
-		},
 
-		["Base"] = {
-			{ "¿Que deseas?", "Saludando" },
-		},
-		["Despedida"] = {
-			{ "Adios aqui estare esperando", "Saludando" },
-		},
+	["Base"] = {
+		{ "Hola!, ¿Que tema quieres ver?", "Saludando" },
+	},
+	["Despedida"] = {
+		{ "Adios aqui estare esperando", "Saludando" },
+	},
 
-		--Sin eleccion
-		[""] = {},
-		["ConversionNumeros"] = {
-			["Conversiones"] = {
-				["Conversion de Longitud"] = {
-					{ "Primero tenemos que tener un orden de posición, que sería.", "Saludando" },
-					{ "1 = mm, \n2 = cm, \n3 = dm, \n4 = m \n5 = dam \n6 = hm \n7 = km", "Saludando" },
-					{
-						"Un ejemplo: \n Si el primer número es 20 milímetros (mm) y tenemos que convertirlo a metros (m), lo que tenemos que hacer es usando la tabla anterior una resta entre 4 - 1, donde el 4 significa que es (m)y el 1 que seria (mm).",
-						"Saludando",
-					},
-					{ "En este caso nos da 3, ahora tenemos que dividir 20mm entre 1,000", "Saludando" },
-					{
-						"El “1,000” sale agregando ceros con el resultado que nos dio, como en este caso fueron 3, se agregan 3 ceros al número divisor. Si fuera de milimetros a centimetros, nada más se agregaría un cero)",
-						"Saludando",
-					},
-					{
-						"para dar el resultado tendríamos que dividir 20mm entre 1,000 para que nos dé .02 m",
-						"Saludando",
-					},
-					{ "El resultado es de .02 metros.", "Saludando" },
-					{
-						"Pero si queremos hacerlo de manera inversa tenemos que hacer el mismo procedimiento solo que ahora sería multiplicando y restando al revés, en vez de (mm - m) a (m - mm)",
-						"Saludando",
-					},
-				},
-				["Conversion de Masa"] = {
-					{ "Primero tenemos que tener un orden de posición, que sería el siguiente.", "Saludando" },
+	--Sin eleccion
+	[""] = {},
+	["ConversionUnidades"] = {
+		["¿Para que convertir unidades?"] = {
+			{
+				"Podemos decir que la conversiones de unidades sirven para relacionar diferentes sistemas métricos",
+				"Escribiendo",
+			},
+			{ " Y con ello lograr un vinculo en las magnitude", "Escribiendo" },
+			{
+				"Como por ejemplo los Fahrenheit se usan en diferentes paises y no sabremos relacionarlo de buena manera",
+				"Escribiendo",
+			},
+			{ "Si no fuese por el conversor no podriamos saber nuestras necesidades", "Escribiendo" },
+		},
+		["Unidad principal a la que se desea convertir"] = {
+			["La Longitud"] = { { "m (Metros)", "Saludando" } },
+			["La Masa"] = { { "g (Gramos)", "Saludando" } },
+			["La Temperatura"] = { { "°C (Centigrados)", "Saludando" } },
+			["El Tiempo"] = { { "seg (Segundos)", "Saludando" } },
+			["La Area"] = { { "m² (Metro cuadrado)", "Saludando" } },
+			["El Volumen"] = { { "m³ (Metro cubico)", "Saludando" } },
+			["La Velocidad"] = { { "m/seg (Metro sobre segundo)", "Saludando" } },
+			["La Aceleracion"] = { { "m/seg² (Metro sobre segundo cuadrado)", "Saludando" } },
+			["Las Calorias"] = { { "Cal (Calorias)", "Saludando" } },
+		},
+		-- ["¿Por qué usar este Conversor de Unidades a las demás?"] = {
+		-- 	{ "Lo que se busca en este conversor no es darte resultados, si no aprender en como resolverlo", "Saludando" },
+		-- 	{ "Hay muchos conversores para resolver unidades pero ninguno te explica de ", "Saludando" },
 
-					{ "1 = mg\n2 = cg\n3 = dg\n4 = g\n5 = dag\n6 = hg\n7 = kg", "Saludando" },
-					{
-						"Un ejemplo: \nSi el primer número es  10 gramos (g) y tenemos que convertirlo a metros (kg), lo que tenemos que hacer es usando la tabla anterior una resta entre 7 - 4 , donde el 7 significa que es kilogramos y el 4 que sería gramos.",
-						"Saludando",
-					},
-					{ "En este caso nos da 3, ahora tenemos que dividir 10g entre 1,000", "Saludando" },
-					{
-						"El “1,000” sale agregando ceros con el resultado que nos dio, como en este caso fueron 3, se agregan 3 ceros al número divisor. Si fuera de hectogramos a kilogramos, nada más se agregaría un cero",
-						"Saludando",
-					},
-					{
-						"Para dar el resultado tendríamos que dividir 10g entre 1,000.\nEl resultado es de .02 gramos.",
-						"Saludando",
-					},
-					{
-						"Pero si queremos hacerlo de manera inversa tenemos que hacer el mismo procedimiento solo que ahora sería multiplicando y restando al revés, en vez de (g - kg) a (kg - g)",
-						"Saludando",
-					},
+		-- },
+	},
+	["PlanoCartesiano"] = {
+		["¿Como sacar el datos..?"] = {
+			["Distancia entre dos puntos"] = {
+				{ "Para resolverlo tenemos que usar esta operacion.", "Saludando", "√(x2 - x1)² + (y2 - y1)²" },
+				{ "Para uso de la calculadora.", "Saludando", "√((x2 - x1)² + (y2 - y1)²)", "Saludando" },
+				{ "Para hacer esto tenemos que tener en cuenta la posicion x / y del eje y el vertice", "Saludando" },
+				{ "Tomemos de ejemplo: \n vertice = (2x, 5y) \n eje = (10x, 3y) ", "Saludando" },
+				{
+					"Ahora se resta la posicion x/ y. \n (el 2 simboliza la posicion del eje y el 1 del vertice) ",
+					"Saludando",
+					"(x2 - x1), (y2 - y1)",
 				},
-				["Conversion de Temperatura"] = {
-					{ "Primero tenemos que ver que significa cada Temperatura", "Saludando" },
-					{
-						"f = Fahrenheit \nk = Kelvins \nc = Celsius \n\nSe tiene que reemplazar las letras por el número que desees",
-						"Saludando",
-					},
-					{
-						"Kelvins:\n\nKelvins a Fahrenheit \nf = (k - 273.15) * 1.8 + 32\nKelvins a Celsius\n c = k - 273.15",
-						"Saludando",
-					},
-					{
-						"Celsius:\n\nCelsius a Kelvins k = c + 273.15\nCelsius a Fahrenheit\nf = (c * 1.8) + 32",
-						"Saludando",
-					},
-					{
-						"Fahrenheit:\n\nFahrenheit a Kelvins\nk = (f - 32) * 1.8 + 273.15\nFahrenheit  a Celsius\nc = (f - 32) * 1.8",
-						"Saludando",
-					},
+				{ "Resuelto con los numeros planteados:", "Saludando", "√(8)² + (- 2)²" },
+				{ "Con eso resuelto lo elevamos al cuadrado", "Saludando", "√ x² + y²" },
+				{ "Resuelto con los numeros planteados:", "Saludando", "√ 64 + 4" },
+				{ "Lo sumamos", "Saludando", "√ 68" },
+				{ "Ahora usamos la raiz redondeado y quedara", "Saludando", "8.2462" },
+			},
+			--
+			["Los grados"] = {
+				{ "Primero tenemos que saber la posicion x/y del veritce y del eje", "Saludando" },
+				{ "Usemos estas posiciones de ejemplo:\n Vetice = (2x, 5y)\n Eje = (10x, 3y)" },
+				{
+					"Ahora restarlos\n (2 = posicion del eje, 1 = posicion del vertice)",
+					"Saludando",
+					"(x2 - x1), (y2 - y1)",
 				},
-				["Conversion de Tiempo"] = {
-					{
-						"De segundos a minutos:\n\nDivide la cantidad de segundos entre 60 para obtener los minutos. El residuo serán los segundos restantes.",
-						"Saludando",
-					},
-					{ "Minutos = Segundos / 60 Segundos restantes = Segundos % 60", "Saludando" },
+				{ "Con las posiciones establecidas quedaran así", "Saludando", "(10 - 2), (3 - 5)" },
+				{ "Respondido daria:", "Saludando", "(8), (-2)" },
+				{
+					"Ahora se usa tan-1 con radianes\n (Esta operacion no se puede hacer en la calculadora)",
+					"Saludando",
+					"[tan-1(y/x)]",
+				},
+				{ "Con las poscisiones establecidas seria:", "Saludando", "[tan-1(-4]" },
+				{ "Y usando el tan-1 seria:", "Saludando", "-1.32581766°" },
+			},
+			["Tipo de angulo"] = {
+				{
+					'Primero tenemos que saber que grados tiene podemos haciendolo con la operacion que se explica en "Los grados"',
+					"Saludando",
+				},
+				{ 'Si angulo es igual a 0° es un angulo "Nulo"', "Saludando" },
+				{ 'Si el angulo tiene 360° es un angulo "Completo"', "Saludando" },
+				{
+					"(En la prueba se muestra ambas ya que no se sabe si dio la vuelta o esta empezando ya que equivale lo mismo)",
+					"Saludando",
+				},
+				{ 'Si el angulo es mayor 0° y menor a 90° es un angulo "Agudo"', "Saludando" },
+				{ 'Si el angulo tiene exactamente 90° es un angulo "Recto"', "Saludando" },
+				{ 'Si el angulo es mayor a 90° y menor a 180° es un angulo "Obusto"', "Saludando" },
+				{ 'Si el angulo tiene exactamente 180° es un angulo "Llano"', "Saludando" },
+				{ 'Si el angulo es mayor a 180° y menor a 360° es un angulo "Concavo"', "Saludando" },
+			},
+		},
+		["¿Para que sirve el plano cartesiano?"] = {
+			{
+				"Tiene varios usos pero aquí se usa principalmente el uso de fisica e incluso un poco de matematicas",
+				"Saludando",
+			},
+			{
+				"Se usa para: Representar puntos, Graficacion de funciones matematicas, Ingenieria y diseño, etc.",
+				"Saludando",
+			},
+			{
+				"Pero nosotros lo usamos para enseñar como son los movimientos de objetos de dos dimensiones",
+				"Saludando",
+			},
+		},
+		["¿Como saber cuando la posicion es positiva o negativa?"] = {
+			{
+				"Para este caso podemos usar el eje (punto medio), ejeX (linea horizontal) y ejeY (linea vertical) de color rojo, para ver si es positivo o negativo",
+				"Saludando",
+			},
+			{
+				"Si el objeto se encuentra mas a la derecha del eje la posicion X es positiva de lo contrario es negativo si se encuentra en la misma posicion de la linea vertical es 0",
+				"Saludando",
+			},
+			{
+				"Si el objeto se encuentra mas a la arriba del eje la posicion Y es positiva de lo contrario es negativo si se encuentra en la misma posicion de la linea horizontal es 0",
+				"Saludando",
+			},
+		},
+		["¿Que contiene un plano cartesiano?"] = {
+			{
+				"Punto de origen:\nEste es el centro del plano cartesiano se usa de referencia su posicion es(0x, 0y)\n(Es el punto negro del plano)",
+				"Saludando",
+			},
+			{ "Eje:\nEste tiene un ejeX (eje horizontal) y ejeY (eje vertical)\n(Es el punto de azul)", "Saludando" },
+			{
+				"Cuadrantes:\nEstos son las partes positivas o negativas de las posiciones x/y\n(Son los cuadros grises que estan a los lados del eje)",
+				"Saludando",
+			},
+			{
+				"Cordenadas:\nCada punto representa las cordenas de numeros\n(Son todos los cuadros grises)",
+				"Saludando",
+			},
+			{ "Uniades de medida:\nEste esta etiquetado con unidades de medida de los ejes", "Saludando" },
+			{ "Este ultimo no se encuentra en el plano pero si en los movimientos", "Saludando" },
+		},
+	},
+	["Calculadora"] = {
+		["¿Que tipo de calculadora es?"] = {
+			{ 'Es una calculadora de "Expresion Ambigua"', "Saludando" },
+			{
+				"Esto significa que algunos calculos se tengan que escribir diferente para dar un resultado especifico como:",
+				"Saludando",
+				"8/2(2 + 2)",
+			},
+			{ "Esto hace que en una expresion de precedencia de operadores de el resultado:", "Saludando", "1" },
+			{ "Mientras tanto en una calculadora de expresión ambigua de el resultado:", "Saludando", "16" },
+			{
+				"Ya que lo que hace es resolver el parentesis y despues seguir con la operacion de izquierda a derecha siguiendo la jerarquia de operaciones:",
+				"Saludando",
+				"8/2(4)",
+			},
+			{ "Así provocando que de:", "Saludando", "4(4) = 16" },
+			{
+				"Mientras tanto la expresión de precedencia de operadores se resuelve el parentesis y con eso se mutlplica con el numero anterior",
+				"Saludando",
+				"8 / 2(4)",
+			},
+			{ "Así dando:", "Saludando", "8/8 = 1" },
+			{
+				"Para remediar esto tienes que plantear la operacion diferente usando parentesis:",
+				"Saludando",
+				"(8/(2(2 + 2)) = 1",
+			},
+		},
+		["Jerarquia de operaciones"] = {
+			{ "El primero en resolverse es el parentesis, y la tigonometria", "Saludando", "(), [cos()]" },
+			{ "Despues sigue la potencia y las raizes", "Saludando", "^, ², √" },
+			{ "Despues sigue la multiplicación y divisior", "Saludando", "*, /" },
+			{ "Y por ultimo queda la suma y restas", "Saludando", "+, -" },
+			{
+				"1.- Parentesis y trigonometria,\n 2.- Potencia y raices,\n 3.- Multiplicacion y divisor,\n 4.- Suma y Resta",
+				"Saludando",
+			},
+		},
+		["Reglas de operaciones"] = {
+			{ "Tienes que resolver primero los parentesis y la trigonometria", "Saludando" },
+			{
+				"En caso de los parentesis, tomalo en cuenta como una operacion dentro de otra ya que a la hora de resolverlo tienes que seguir la jerarquia desde el principio",
+				"Saludando",
+			},
+			{
+				"Así que si tiene otro parentesis dentro de el se tiene que resolver primero",
+				"Saludando",
+				"(2 + 2 (5 + 1))",
+			},
+			{ "Ejemplo de como quedaria el primer procedimiento", "Saludando", "(2 + 2(6))" },
+			{
+				"Y la trigonometria seria igual solo que al terminar la operacion lo convertimos al tipo trigonometrico requerido",
+				"Saludando",
+			},
+			{
+				'Ejemplo:\n (No es necesario usar los corchetes "[]", solo es ejemplo para copiar)',
+				"Saludando",
+				"[cos(2 + 13)]",
+			},
+			{ "Usando rad para resolverlo:", "Saludando", "[cos(15)] = (-0.759)" },
+			{
+				"Despues de esto se resuelve de izquierda a derecha siguiendo la jerarquia de numeros\n (Esto depende de la calculadora en caso de esta al ser ambigua se hace de esta manera)",
+				"Saludando",
+			},
+			{ "Ejemplo:", "Saludando", "2 * 3 + (5 ^ 2)" },
+			{ "Resolver primero el parentesis", "Saludando", "2 * 3 + (10)" },
+			{ "Al no tener potencias sigue la multiplicaion y división", "Saludando", "6 + 10 " },
+			{ "Dando:", "Saludando", "16" },
+		},
+		["¿Como funciona y para que es el conversor en la calculadora?"] = {
+			{ "Sirve para entender que las variables no siempre tendran la misma unidad", "Saludando" },
+			{
+				'Lo primero que hace es convertirlos a una unidad principal, usando "{}" y dentro de el poner la unidad que quieres convertir',
+				"Saludando",
+				"2{yd} + 1{min}",
+			},
+			{ "Ahora se pone en su unidad estandar, en este caso es m y seg", "Saludando" },
+			{ "Con las unidades cambiada sería:", "Saludando", "1.828{m} + 60{seg} " },
+			{ "Resuelto seria:", "Saludando", "61.829F" },
+		},
+	},
 
-					{
-						"De minutos a horas:\n\nDivide la cantidad de minutos entre 60 para obtener las horas. El residuo serán los minutos restantes.",
-						"Saludando",
-					},
-					{ "Horas = Minutos / 60 Minutos restantes = Minutos % 60", "Saludando" },
-				},
-				["Conversion Cuadrado/Cubico"] = {
-					{
-						"Usando el ejemplo de Longitud pero en caso del Cuadrado multiplicando por 20\n y por 30 usando el Cubico",
-						"Saludando",
-					},
-				},
+	["MovimientoRectilinio"] = {
+		["Sacar datos de movimiento"] = {
+			["Con Aceleracion"] = {
+				["Distancia"] = {},
+				["Velocidad"] = {},
 			},
-			["Tutorial"] = {
-				["¿Como sirve?"] = {
-					{ "En la parte de arriba tienes diferentes tipos de numeros para convertir", "Saludando" },
-					{
-						"y a su lado izquierdo saldra diferentes tipos de medidas dependiendo que tipo uso",
-						"Saludando",
-					},
-					{ "al dar click lo podra seleccionar para ponerlo en uno de los 2 cuadros grises", "Saludando" },
-					{
-						"el cuadro gris de arriba es el numero que quiere convertir y el de abajo es a que se va a convertir",
-						"Saludando",
-					},
-					{ "ya al tener esto puede poner los datos en el recuadro blanco de la parte arriba", "Saludando" },
-				},
-				["Datos"] = {
-					["¿Para que sirve convertir numeros?"] = {
-						{ "En muchas cosas", "Saludando" },
-						{ "en diferentes paises se usa una diferente manera de medir", "Saludando" },
-						{
-							"un ejemplo seria que en Estados Unidos se usa en la Temperatura los Fahrenheit.",
-							"Saludando",
-						},
-						{ "Otras muy importantes son:", "Saludando" },
-						{
-							"Presentación de datos, Cálculos y comparaciones, Interacción con sistemas externos, Optimización de rendimiento, etc.",
-							"Saludando",
-						},
-					},
-				},
+			["Sin Aceleracion"] = {
+				["Distancia"] = {},
+				["Velocidad"] = {},
 			},
 		},
-		["PlanoCartesiano"] = {
-			["Operaciones"] = {
-				["¿Como puedo saber la distancia entre dos puntos?"] = {
-					{ "Tienes que tener la posición de ambos puntos", "Saludando" },
-					{ "Las restas sus lados ejem:\n\n x2 - x1, donde su número es su respectivo punto ", "Saludando" },
-					{ "x2 sería el eje y x1 el punto.", "Saludando" },
-					{ "Y le pones un potencial al cuadrado quedaría:\n (x2 - x1)²", "Saludando" },
-					{ "Hacemos lo mismo con su posición Y (y2 - y1)²", "Saludando" },
-					{ "Ahora lo sumamos x + y", "Saludando" },
-					{ "Y por último le sacamos el raíz √", "Saludando" },
-				},
-				["¿Como puedo saber cuantos grados tiene?"] = {
-					{
-						"Tienes que restar (x2 - x1) y (y2 - y1) donde el 2 es el eje y el 1 el punto",
-						"Saludando",
-					},
-					{
-						"Ahora usando tangente(y/x) y con el resultado ver dependiendo de la posicion si es positivo o negativo",
-						"Saludando",
-					},
-				},
-				["¿Como se que tipo de angulo tiene un plano?"] = {
-					{
-						'Si el punto se encuentra a la derecha del eje en un ángulo "Nulo / Completo" dependiendo del contexto',
-						"Saludando",
-					},
-					{
-						'"Nulo" si solo esta en el principio del Plano Cartesiano, "Completo" si ya dio la vuelta completa',
-						"Saludando",
-					},
-					{
-						'Si el punto se encuentra antes de los 90° y después de 0° será un ángulo "Agudo"',
-						"Saludando",
-					},
-					{
-						'Si el punto está arriba del eje que sería lo mismo a 90° será un ángulo "Recto"',
-						"Saludando",
-					},
+		["Sacar datos de como se movera"] = {
+			["Tiempo Maximo"] = {},
+		},
+		["Principios fisicos que se usan"] = {},
+		["Datos Curiosos"] = {},
+	},
+	-- {"", "Saludando"},
+	--\n
 
-					{
-						'Si el punto está después de los 90° y antes de 180° es un ángulo "Obtuso',
-						"Saludando",
-					},
-					{
-						'Si el punto se encuentra a la izquierda que seria lo mismo a 180° seria un ángulo "Llano"',
-						"Saludando",
-					},
-					{
-						'Si los grados es mayor a 180° y menor a 360° seria un ángulo "Cóncavo"',
-						"Saludando",
-					},
-				},
-			},
+	["CaidaLibre"] = {
+		["Sacar datos de movimiento"] = {
+			["Velocidad Final"] = {},
+			["Altura"] = {},
+			["Tiempo dependiendo de la altura"] = {},
+			-- vf = (g * t)
+			-- h = ((g * (t ^ 2)) / 2)
+			-- t = math.sqrt((2 * h) / g)
 		},
-		["MovimientoRectilinio"] = {
-			["Operaciones"] = {
-				["Sacar datos con solo Velocidad Inicial"] = {
-					{ "Datos para las formulas", "Saludando" },
-					{ "d = Distancia\nvi = Velocidad Inicial\nt = Tiempo ", "Saludando" },
-					{ "d = vit", "Saludando" },
-				},
-				["Sacar datos con Aceleración"] = {
-					{ "Datos para las formulas", "Saludando" },
-					{ "d = Distancia\nvi = Velocidad Inicial\nt = Tiempo\na = Aceleracion", "Saludando" },
-					{ "d = vit + .5at²", "Saludando" },
-					{ "v = vi + at", "Saludando" },
-					{ "(Si no se tiene Velocidad Inicial se usa el numero 0)", "Saludando" },
-				},
-			},
-			["General Movimiento"] = {
-				["¿Cómo funciona la interfaz?"] = {
-					{
-						"A tu izquierda tienes las configuraciones para que el sistema sepa qué propiedades quieres que tenga",
-						"Saludando",
-					},
-					{
-						"A un lado tienes botones, el primero sirve para iniciar el objeto a un lado su botón de pausa",
-						"Saludando",
-					},
-					{
-						"Tienes flechas donde te indica que velocidad quieres que tenga el tiempo de ejecución",
-						"Saludando",
-					},
-					{
-						'Y por ultimo a tu derecha datos sobre ese mismo mecanismo, datos como "Tiempo Máximo"',
-						"Saludando",
-					},
-				},
-				["¿Cuales son los tipos de Configuraciones?"] = {
-					{ "Existen tres tipos de configuraciones", "Saludando" },
-					{
-						'El "Primero" son datos que tienes que ponerlas sin ninguna excepción',
-						"Saludando",
-					},
-					{ 'El "Secundario" tienes que elegir entre sus opciones para elegir solo uno', "Saludando" },
-					{ 'El "Terciario" son datos opcionales  que no son vitales para el funcionamiento', "Saludando" },
-				},
-				["¿Cómo puedo cambiar el tiempo?"] = {
-					{
-						"Tienes que dar pausa y en los datos del experimento puedes mover su tiempo al que tu quieras",
-						"Saludando",
-					},
-				},
-			},
+		["Sacar datos de como se movera"] = {
+			["TiempoMaximo"] = {}, --math.sqrt((2 * h) / g)
+			["Altura que recorrera"] = {}, --g * ((tiempoFinal ^ 2) / 2)
 		},
-		-- {"", "Saludando"},
-		--\n
+		["Principios fisicos que se usan"] = {},
+		["Datos Curiosos"] = {},
 
-		["CaidaLibre"] = {
-			["Operaciones"] = {
-				["Sacar datos de movimiento"] = {
-					{
-						"Los datos de movimiento son los que se generan mediante el movimiento del objeto.",
-						"Saludando",
-					},
-					{ "Datos importantes.", "Saludando" },
-					{ "v = Velocidad\nh = Altura\nt = Tiempo", "Saludando" },
-					{ "Datos extras serían:\ng = Gravedad", "Saludando" },
-					{ "para sacar la velocidad se usa:", "Saludando" },
-					{ "t = √2h / g", "Saludando" },
-					{ "v = gt", "Saludando" },
-					{ "h = gt² / 2", "Saludando" },
-				},
-				["Sacar datos de como se moverá"] = {
-					{ 'Estos datos predicen alguno datos como "TiempoMaximo" o/y "TiempoSubida"', "Saludando" },
-					{ "Datos para las formulas", "Saludando" },
-					{ "g = Gravedad\n h = Altura", "Saludando" },
-					{ "TiempoFinal = √2h / g", "Saludando" },
-					{ "AlturaRecorrer = gTf² / 2\n(TiempoFinal = Tf)", "Saludando" },
-				},
+		--
+	},
+	["TiroVertical"] = {
+		["Sacar datos de movimiento"] = {
+			["Con tiempo"] = {
+				["VelocidadInicial"] = {}, -- h = (vi * t) - (0.5 * g) * (t ^ 2)
+				["Velocidad"] = {}, -- v = vi - (g * t)
+				["Altura"] = {}, -- h = (vi * t) - (0.5 * g) * (t ^ 2)
 			},
-			["General Movimiento"] = {
-				["¿Cómo funciona la interfaz?"] = {
-					{
-						"A tu izquierda tienes las configuraciones para que el sistema sepa qué propiedades quieres que tenga",
-						"Saludando",
-					},
-					{
-						"A un lado tienes botones, el primero sirve para iniciar el objeto a un lado su botón de pausa",
-						"Saludando",
-					},
-					{
-						"Tienes flechas donde te indica que velocidad quieres que tenga el tiempo de ejecución",
-						"Saludando",
-					},
-					{
-						'Y por ultimo a tu derecha datos sobre ese mismo mecanismo, datos como "Tiempo Máximo"',
-						"Saludando",
-					},
-				},
-				["¿Cuales son los tipos de Configuraciones?"] = {
-					{ "Existen tres tipos de configuraciones", "Saludando" },
-					{
-						'El "Primero" son datos que tienes que ponerlas sin ninguna excepción',
-						"Saludando",
-					},
-					{ 'El "Secundario" tienes que elegir entre sus opciones para elegir solo uno', "Saludando" },
-					{ 'El "Terciario" son datos opcionales  que no son vitales para el funcionamiento', "Saludando" },
-				},
-				["¿Cómo puedo cambiar el tiempo?"] = {
-					{
-						"Tienes que dar pausa y en los datos del experimento puedes mover su tiempo al que tu quieras",
-						"Saludando",
-					},
-				},
+			["Con velocidad"] = {
+				["Altura"] = {}, -- h = ((v ^ 2) - (vi ^ 2)) / (2 * -g)
+				["Tiempo"] = {}, -- t = (vi - v) / g
 			},
 		},
-		["TiroVertical"] = {
-			["Operaciones"] = {
-				["Sacar datos de movimiento"] = {
-					{
-						"Los datos de movimiento son los que se generan mediante el movimiento del objeto.",
-						"Saludando",
-					},
-					{ "Datos para las formulas", "Saludando" },
-
-					{ "g = Gravedad\nt = Tiempo\nvi = Velocidad Inicial\nv = Velocidad\nh = Altura", "Saludando" },
-					{ "Altura = vit - (0.5 * g) * t²\n\nAltura = v² - vi² / (2 * -g)", "Saludando" },
-					{ "Tiempo = vi - v / g", "Saludando" },
-					{ "Velocidad = vi - gt", "Saludando" },
-				},
-				["Sacar datos de como se movera"] = {
-					{ 'Estos datos predicen como alguno datos como "TiempoMaximo" o/y "TiempoSubida".', "Saludando" },
-					{ "Datos para las formulas", "Saludando" },
-					{ "g = Gravedad\nvi = Velocidad Inicial", "Saludando" },
-					{ "TiempoSubida = vi/g", "Saludando" },
-					{ "TiempoMaximo = TiempoSubida * 2", "Saludando" },
-					{ "AlturaMaxima = vi²/2g", "Saludando" },
-					{ "VelocidadFinal = vi - gvi/g *2 ", "Saludando" },
-				},
+		["Sacar datos de como se movera"] = {
+			["Tiempo Maximo"] = {}, --Tsubida * 2
+			["Altura Maxima"] = {}, --  (vi ^ 2) / (2 * g),
+			["Tiempo de Subida"] = {}, -- vi / g,
+			["Velocidad Final"] = {}, --vi - (g * ((vi / g) * 2)),
+		},
+		["Principios fisicos que se usan"] = {},
+		["Datos Curiosos"] = {},
+		--
+	},
+	["TiroParabolico"] = {
+		["Sacar datos de movimiento"] = {
+			["Velocidad"] = {
+				["Velocidad X"] = {}, --vi * math.cos(graRad)(rad)
+				["Velocidad Y"] = {}, -- (vi * math.sin(graRad)) - (g * t),
 			},
-			["General Movimiento"] = {
-				["¿Cómo funciona la interfaz?"] = {
-					{
-						"A tu izquierda tienes las configuraciones para que el sistema sepa qué propiedades quieres que tenga",
-						"Saludando",
-					},
-					{
-						"A un lado tienes botones, el primero sirve para iniciar el objeto a un lado su botón de pausa",
-						"Saludando",
-					},
-					{
-						"Tienes flechas donde te indica que velocidad quieres que tenga el tiempo de ejecución",
-						"Saludando",
-					},
-					{
-						'Y por ultimo a tu derecha datos sobre ese mismo mecanismo, datos como "Tiempo Máximo"',
-						"Saludando",
-					},
-				},
-				["¿Cuales son los tipos de Configuraciones?"] = {
-					{ "Existen tres tipos de configuraciones", "Saludando" },
-					{
-						'El "Primero" son datos que tienes que ponerlas sin ninguna excepción',
-						"Saludando",
-					},
-					{ 'El "Secundario" tienes que elegir entre sus opciones para elegir solo uno', "Saludando" },
-					{ 'El "Terciario" son datos opcionales  que no son vitales para el funcionamiento', "Saludando" },
-				},
-				["¿Cómo puedo cambiar el tiempo?"] = {
-					{
-						"Tienes que dar pausa y en los datos del experimento puedes mover su tiempo al que tu quieras",
-						"Saludando",
-					},
-				},
+			["Posicion"] = {
+				["Posicion X"] = {}, --vi * math.cos(graRad)(rad) -- x = vx * t
+				["Posicion Y"] = {}, --  vi * math.sin(graRad)(rad) --y = (vy * t) - (0.5 * g * t ^ 2)
+			},
+			["Tener la velocidad inicial para que tenga..."] = {
+				["Un Tiempo establecido"] = {}, --vi =  math.sqrt((-0.5 * g * t) ^ 2 / math.sin(graRad) ^ 2)
+				["Una Distacia establecida"] = {}, --vi = math.sqrt((-0.5 * g * t) ^ 2 / math.sin(graRad) ^ 2)
 			},
 		},
-		["TiroParabolico"] = {
-			["Operaciones"] = {
-				["Sacar datos de movimiento"] = {
-					{ "Los datos de movimiento son los que se generan mediante el movimiento del objeto", "Saludando" },
-					{ "Datos para las formulas", "Saludando" },
-					{ "g = Gravedad\nt = Tiempo\nvi = VelocidadInicial\ngra = Grados\ndis = Distancia", "Saludando" },
-					{
-						"Velocidad Horizontal (vx) = vi * cos(gra), ,\nVelocidad Vertical (vy) = vi * sin(gra),\n (Todos los calculos fueron hechos con radianes.) (vy)",
-						"Saludando",
-					},
-					{ "Posicion Horizontal = vxt", "Saludando" },
-					{ "Posicion Vertical = vyt - .5gt²", "Saludando" },
-					{ "VelocidadInicial = √(-.5gt)² / sin(gra)²", "Saludando" },
-					{ "VelocidadInicial = √dis * g/ sin(2 * gra)", "Saludando" },
-				},
-				["Sacar datos de como se movera"] = {
-					{ 'Estos datos predicen como alguno datos como "TiempoMaximo" o/y "TiempoSubida"', "Saludando" },
-					{ "Datos para las formulas", "Saludando" },
-					{ "g = Gravedad\ngra = Grados\nvi = VelocidadInicial", "Saludando" },
-					{
-						"Velocidad Horizontal (vx) = vi * cos(gra), ,\nVelocidad Vertical (vy) = vi * sin(gra),\n (Todos los calculos fueron hechos con radianes.) (vy)",
-						"Saludando",
-					},
-					{ "TiempoSubida = vy/g", "Saludando" },
-					{ "AlturaMaxima = vy²/2g", "Saludando" },
-					{ "TiempoMaximo = 2vy / g", "Saludando" },
-					{ "AlcanceHorizontal = vx(vy/2g)", "Saludando" },
-				},
-			},
-			["General Movimiento"] = {
-				["¿Cómo funciona la interfaz?"] = {
-					{
-						"A tu izquierda tienes las configuraciones para que el sistema sepa qué propiedades quieres que tenga",
-						"Saludando",
-					},
-					{
-						"A un lado tienes botones, el primero sirve para iniciar el objeto a un lado su botón de pausa",
-						"Saludando",
-					},
-					{
-						"Tienes flechas donde te indica que velocidad quieres que tenga el tiempo de ejecución",
-						"Saludando",
-					},
-					{
-						'Y por ultimo a tu derecha datos sobre ese mismo mecanismo, datos como "Tiempo Máximo"',
-						"Saludando",
-					},
-				},
-				["¿Cuales son los tipos de Configuraciones?"] = {
-					{ "Existen tres tipos de configuraciones", "Saludando" },
-					{
-						'El "Primero" son datos que tienes que ponerlas sin ninguna excepción',
-						"Saludando",
-					},
-					{ 'El "Secundario" tienes que elegir entre sus opciones para elegir solo uno', "Saludando" },
-					{ 'El "Terciario" son datos opcionales  que no son vitales para el funcionamiento', "Saludando" },
-				},
-				["¿Cómo puedo cambiar el tiempo?"] = {
-					{
-						"Tienes que dar pausa y en los datos del experimento puedes mover su tiempo al que tu quieras",
-						"Saludando",
-					},
-				},
-			},
+		["Sacar datos de como se movera"] = {
+			["Tiempo Maximo"] = {}, -- (2 * (vi * math.sin(graRad))) / g
+			["Altura Maxima"] = {}, --vy ^ 2) / (2 * g),
+			["Tiempo Subida"] = {}, --(vi * math.sin(graRad)) / g
+			["Alcance Horizontal"] = {}, -- -(vx * (vy / g * 2)),
 		},
+		["Principios fisicos que se usan"] = {},
+		["Datos Curiosos"] = {},
+		--
 	},
 }
 

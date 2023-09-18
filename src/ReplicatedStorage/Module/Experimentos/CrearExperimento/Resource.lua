@@ -69,6 +69,15 @@ function Resource:activarFuncion(tbEscanear, folderNombre, Propiedades, GetPrope
 	end
 end
 
+function Resource.findCompleto(tb: {}, buscar)
+	for _, v in tb do
+		if v == buscar or (type(v) == "table" and v[1] == buscar) then
+			return true
+		end
+	end
+	return false
+end
+
 local aprobado = {
 	"-",
 	".",

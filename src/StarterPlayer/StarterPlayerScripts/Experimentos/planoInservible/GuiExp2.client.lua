@@ -11,7 +11,6 @@ until plrs.LocalPlayer
 
 local plr = plrs.LocalPlayer
 local plrGui = plr.PlayerGui
-local pais = plr:WaitForChild("Datos").Pais
 
 local guiPlanoCartesiano = plrGui:WaitForChild("Experimentos").PlanoCartesianoGui
 
@@ -76,7 +75,7 @@ for _, v in pairs(configuracionesGui.Selector.ScrollingFrame:GetChildren()) do
 		local tb = v:FindFirstChildOfClass("TextBox")
 		tb.MouseEnter:Connect(function()
 			guiPlanoCartesiano.TextData.Visible = true
-			guiPlanoCartesiano.TextData.TextLabel.Text = TextoData[pais.Value]["PlanoCartesiano"][v.Name]
+			guiPlanoCartesiano.TextData.TextLabel.Text = TextoData["PlanoCartesiano"][v.Name]
 		end)
 		tb.MouseLeave:Connect(function()
 			guiPlanoCartesiano.TextData.Visible = false

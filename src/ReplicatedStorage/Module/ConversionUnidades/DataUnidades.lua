@@ -32,6 +32,8 @@ local data = {
 			["dag"] = 5,
 			["hg"] = 6,
 			["kg"] = 7,
+
+			["Especial"] = {}
 		},
 		["Tiempo"] = {
 			["seg"] = 1,
@@ -39,6 +41,14 @@ local data = {
 			["Especial"] = {
 				["min"] = { 60 },
 				["hr"] = { 3600 },
+			},
+		},
+		["TiempoCuadrado"] = {
+			["seg²"] = 1,
+
+			["Especial"] = {
+				["min²"] = { 3600 },
+				["hr²"] = { 12960000 },
 			},
 		},
 		["Temperatura"] = {
@@ -95,6 +105,7 @@ local data = {
 	["NeutralMedicion"] = {
 		["Temperatura"] = "°C",
 		["Tiempo"] = "seg",
+		["TiempoCuadrado"] = "seg²",
 		["Masa"] = "g",
 		["Longitud"] = "m",
 		["Area"] = "m²",
@@ -152,6 +163,10 @@ local data = {
 		["seg"] = "Segundos",
 		["min"] = "Minutos",
 		["hr"] = "Horas",
+
+		["seg²"] = "Segundos al cuadrado",
+		["min²"] = "Minutos al cuadrado",
+		["hr²"] = "Horas al cuadrado",
 
 		["°C"] = "Centígrados",
 		["°F"] = "Fahrenheit",
@@ -214,6 +229,10 @@ local data = {
 		["Minutos"] = "min",
 		["Horas"] = "hr",
 
+		["Segundos al cuadrado"] = "seg²",
+		["Minutos al cuadrado"] = "min²",
+		["Horas al cuadrado"] = "hr²",
+
 		["Centígrados"] = "°C",
 		["Fahrenheit"] = "°F",
 		["Kelvin"] = "°K",
@@ -222,6 +241,20 @@ local data = {
 		["Kj"] = "Kilojulios",
 		["cal"] = "Calorías",
 		["kcal"] = "Kilocalorías",
+	},
+
+	["Turno"] = {
+		[1] = { ["Longitud"] = "mm", ["Tiempo"] = "seg" },
+		[2] = { ["Longitud"] = "cm", ["Tiempo"] = "min" },
+		[3] = { ["Longitud"] = "dm", ["Tiempo"] = "hr" },
+		[4] = { ["Longitud"] = "m" },
+		[5] = { ["Longitud"] = "dam" },
+		[6] = { ["Longitud"] = "hm" },
+		[7] = { ["Longitud"] = "km" },
+		[8] = { ["Longitud"] = "yd" },
+		[9] = { ["Longitud"] = "ft" },
+		[10] = { ["Longitud"] = "in" },
+		[11] = { ["Longitud"] = "mi" },
 	},
 	["Colores"] = {
 		["Normal"] = Color3.fromRGB(0, 0, 0),
