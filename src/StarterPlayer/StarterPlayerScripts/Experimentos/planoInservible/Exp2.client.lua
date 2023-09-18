@@ -297,7 +297,7 @@ datosScrollingFrame.Giro:FindFirstChildOfClass("ImageButton").MouseButton1Click:
 			RunService.Heartbeat:Wait()
 		end
 	end)
-	mouse.Button2Down:Wait()
+	mouse.Button1Down:Wait()
 	model:Destroy()
 	task.cancel(tskDefer)
 	girandoEspera = false

@@ -32,8 +32,6 @@ local data = {
 			["dag"] = 5,
 			["hg"] = 6,
 			["kg"] = 7,
-
-			["Especial"] = {}
 		},
 		["Tiempo"] = {
 			["seg"] = 1,

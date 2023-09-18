@@ -196,20 +196,22 @@ for _, v in conversionGui.CambioTipo.ScrollingFrame:GetChildren() do
 					end
 					crearJerarquia("Unidades no estándar", Color3.fromRGB(255, 243, 156), 39 + cont, false)
 
-					for especialNombre, q in dataUnidades.Medicion[turno].Especial do
-						crearJerarquia(
-							especialNombre,
-							Color3.fromRGB(255, 255, 255),
-							if type(q) == "table" then q[1] else q,
-							true,
-							(if type(q) == "table" then q[1] else q) + 40 + cont
-						)
-						crearTextButton(
-							dataUnidades.Nombre[especialNombre],
-							(if type(q) == "table" then math.abs(q[1]) else math.abs(q)) + 40,
-							conversionGui.SelectorVelocidad[pos]
-						)
-						cont += 1
+					if dataUnidades.Medicion[turno].Especial then
+						for especialNombre, q in dataUnidades.Medicion[turno].Especial do
+							crearJerarquia(
+								especialNombre,
+								Color3.fromRGB(255, 255, 255),
+								if type(q) == "table" then q[1] else q,
+								true,
+								(if type(q) == "table" then q[1] else q) + 40 + cont
+							)
+							crearTextButton(
+								dataUnidades.Nombre[especialNombre],
+								(if type(q) == "table" then math.abs(q[1]) else math.abs(q)) + 40,
+								conversionGui.SelectorVelocidad[pos]
+							)
+							cont += 1
+						end
 					end
 				end
 			else
@@ -219,7 +221,16 @@ for _, v in conversionGui.CambioTipo.ScrollingFrame:GetChildren() do
 				crearJerarquia("Posicion de la jerarquia de unidades", Color3.fromRGB(255, 243, 156), 1, false)
 				for nombre, valor in dataUnidades.Medicion[v.Name] do
 					if typeof(valor) == "table" then
-						crearJerarquia("Unidades no estándar", Color3.fromRGB(255, 243, 156), 39, false)
+						if table.find({ "Longitud", "Area", "Volumen" }, v.Name) then
+							crearJerarquia("Unidades no estándar", Color3.fromRGB(255, 243, 156), 39, false)
+						else
+							crearJerarquia(
+								"Unidades que se tienen que despejar",
+								Color3.fromRGB(255, 243, 156),
+								39,
+								false
+							)
+						end
 
 						for especialNombre, q in valor do
 							crearJerarquia(

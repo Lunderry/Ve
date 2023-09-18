@@ -136,20 +136,15 @@ function module.ConversionValue(data)
 						Mover(prop, data, folderJuego)
 					end)
 				else
-					--botonUnidad = textbox
 					botonUnidad.FocusLost:Connect(function()
 						eleccionValue.Value = textBox.Parent.Name
 						tbConversion[v].Tipo[1] = botonUnidad.Text
-
 						prop[v].Value = moduleUnidades:Convertidor(tbConversion[v])
 						Mover(prop, data, folderJuego)
-					end)
-
-					if unidadReferencia[v] == "Aceleracion" then
-						botonUnidad.FocusLost:Connect(function()
+						if unidadReferencia[v] == "Aceleracion" then
 							botonUnidad.Text = botonUnidad.Text .. "²"
-						end)
-					end
+						end
+					end)
 				end
 			else
 				textBox = configuracion[v]
@@ -368,12 +363,19 @@ function module.Funcionamiento(data)
 		local Calculos = data.Calculos(table.unpack(resource.buscarObjetos(data, "PonerCalculo", prop, "X")))
 
 		for i, v in Calculos do
+			if not datosGui:FindFirstChild(i) then
+				continue
+			end
+			datosGui[i].ValorNeutral.Value = v
 			datosGui[i].Numero.Text = moduleUnidades:Convertidor({
 				["Numero"] = v,
 				["Tipo"] = { datosGui[i].Convertir.Value, datosGui[i].Unidad.Text },
 			}) .. datosGui[i].Unidad.Text
 		end
 		for _, v in prop:GetChildren() do
+			if not datosGui:FindFirstChild(v.Name) then
+				continue
+			end
 			datosGui[v.Name].ValorNeutral.Value = v.Value
 			datosGui[v.Name].Numero.Text = moduleUnidades:Convertidor({
 				["Numero"] = v.Value,
@@ -403,13 +405,12 @@ function module.Funcionamiento(data)
 					end
 					prop[v.Name].Value = moduleUnidades:Convertidor({
 						["Numero"] = tonumber(textNumero),
-						["Tipo"] = { v.Convertir.Value, v.Unidad.Text },
+						["Tipo"] = { v.Unidad.Text, v.Convertir.Value },
 					})
 
 					local r = data.Funcion(
 						table.unpack(resource.buscarObjetos(data, "PonerFuncion", prop, "Cambio" .. v.Name))
 					)
-
 					for i, q in r do
 						if i ~= v.Name then
 							if prop:FindFirstChild(i) then
@@ -458,7 +459,7 @@ function module.Funcionamiento(data)
 						prop[i].Value = v
 					end
 					if datosGui:FindFirstChild(i) then
-						datosGui[i].ValorNeutral.Value = v
+						datosGui[i].ValorNeutral.Value = if i == "Tiempo" then prop.Tiempo.Value else v
 						datosGui[i].Numero.Text = moduleUnidades:Convertidor({
 							["Numero"] = v,
 							["Tipo"] = { datosGui[i].Convertir.Value, datosGui[i].Unidad.Text },

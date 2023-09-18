@@ -2,13 +2,7 @@ local posOriginal = {}
 
 for _, v in workspace:GetChildren() do
 	if v:IsA("Folder") and v:FindFirstChild("Folder") and v.Folder:FindFirstChild("Mov") then
-		local mov = v.Folder.Mov.Position
-
-		posOriginal[v.Nivel.Value] = {
-			["X"] = mov.X,
-			["Y"] = mov.Y,
-			["Z"] = mov.Z,
-		}
+		posOriginal[v.Nivel.Value] = v.Folder.Mov.Position
 	end
 end
 
@@ -20,7 +14,7 @@ local Data = {
 		["Nombre"] = "MovimientoRectilinio",
 
 		["Funcion"] = function(a, vi, t, EleccionBasta: string)
-			local d
+			local d, v
 
 			--a = (v - vi) / t
 			--t = (v - vi) / a
@@ -28,11 +22,11 @@ local Data = {
 
 			if table.find({ "Contador", "CambioTiempo" }, EleccionBasta) then
 				if a == 0 then
-					v = d / t
 					d = vi * t
+					v = d / t
 				else
-					v = vi + (a * t)
 					d = (vi * t) + ((0.5 * a) * (t ^ 2))
+					v = vi + (a * t)
 				end
 			end
 
@@ -44,11 +38,14 @@ local Data = {
 		["Calculos"] = function(a, vi)
 			-- buen calculos
 			return {
-				["TiempoMaximo"] = if a < 0 then -vi / a else tonumber("inf"),
+				["TiempoMaximo"] = if (a < 0 and vi > 0) or (a > 0 and vi < 0) then -vi / a else tonumber("inf"),
 			}
 		end,
 		["Sumar"] = function(Resultado)
-			return Vector3.new(posOriginal[3].X, posOriginal[3].Y, posOriginal[3].Z + Resultado.Distancia)
+			if Resultado.Distancia == nil then
+				return posOriginal[3]
+			end
+			return posOriginal[3] + Vector3.new(0, 0, Resultado.Distancia)
 		end,
 		["PonerCalculo"] = { "Aceleracion", "VelocidadInicial" },
 		["PonerFuncion"] = { "Aceleracion", "VelocidadInicial", "Tiempo" },
@@ -165,11 +162,11 @@ local Data = {
 			end
 
 			if Resultado["Altura"] < 0 then
-				return Vector3.new(posOriginal[5].X, posOriginal[5].Y, posOriginal[5].Z)
+				return posOriginal[5]
 			elseif Resultado["Altura"] > 10000 then
 				return Vector3.new(posOriginal[5].X, 10000, posOriginal[5].Z)
 			else
-				return Vector3.new(posOriginal[5].X, posOriginal[5].Y + Resultado["Altura"], posOriginal[5].Z)
+				return posOriginal[5] + Vector3.new(0, Resultado["Altura"], 0)
 			end
 		end,
 		["PonerCalculo"] = { "Gravedad", "VelocidadInicial" },
@@ -237,7 +234,7 @@ local Data = {
 				["TiempoSubida"] = math.abs(vy / g),
 				["AlturaMaxima"] = math.pow(vy, 2) / (2 * g),
 				["TiempoMaximo"] = math.abs((2 * vy) / g),
-				["AlcanceHorizontal"] = -(vx * (vy / g * 2)),
+				["AlcanceHorizontal"] = (vx * (vy / g * 2)),
 			}
 			return tb
 		end,

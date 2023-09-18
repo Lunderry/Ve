@@ -127,7 +127,7 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 		end
 
 		table.insert(seguimiento, {
-			'Vamos a despejar "' .. unidadInicio[1] .. '" a "' .. unidadConvertir[1] .. '"',
+			'Vamos a convertir "' .. unidadInicio[1] .. '" a "' .. unidadConvertir[1] .. '"',
 			data.Colores.Normal,
 		})
 
@@ -141,7 +141,7 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 		end
 
 		table.insert(seguimiento, {
-			'Vamos a despejar "' .. unidadInicio[2] .. '" a "' .. unidadConvertir[2] .. '"',
+			'Vamos a convertir "' .. unidadInicio[2] .. '" a "' .. unidadConvertir[2] .. '"',
 			data.Colores.Normal,
 		})
 
@@ -344,7 +344,7 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 			table.insert(seguimiento, {
 				'Como la unidad de inicio "'
 					.. unidadInicio
-					.. '" es una unidad "No estándar" tenemos que convertirlo a unidad estandar en este caso seria "'
+					.. '" es una unidad que se tiene que convertir a una unidad media en este caso seria "'
 					.. data.NeutralMedicion[buscarTipo]
 					.. '" Usando la siguiente operacion:',
 				data.Colores.Normal,
@@ -400,7 +400,7 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 			table.insert(seguimiento, {
 				'Como la unidad a convertir "'
 					.. unidadConvertir
-					.. '" es una unidad "No estándar" tenemos que convertirlo a unidad estandar en este caso es "'
+					.. '" es una unidad que se tiene que convertir a una unidad media en este caso seria "'
 					.. data.NeutralMedicion[buscarTipo]
 					.. '" Usando la siguiente operacion:',
 				data.Colores.Normal,
@@ -456,7 +456,7 @@ function module:ConvertidorSeguimiento(parametroConv: {})
 				.. unidadInicio
 				.. '" y "'
 				.. unidadConvertir
-				.. '" son una unidad "No estándar" tenemos que convertir una de las dos unidades, en este caso seria "'
+				.. '" es una unidad que se tiene que convertir a una unidad media en este caso seria "'
 				.. unidadInicio
 				.. '" a una unidad neutral "'
 				.. data.NeutralMedicion[buscarTipo]

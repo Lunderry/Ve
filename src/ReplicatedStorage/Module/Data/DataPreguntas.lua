@@ -1,4 +1,4 @@
-local module = {
+return {
 	["Tutorial"] = {
 		["Tutorial1"] = {
 			{ "Es la primera vez que te veo", "Saludando" },
@@ -43,6 +43,24 @@ local module = {
 			["La Velocidad"] = { { "m/seg (Metro sobre segundo)", "Saludando" } },
 			["La Aceleracion"] = { { "m/seg² (Metro sobre segundo cuadrado)", "Saludando" } },
 			["Las Calorias"] = { { "Cal (Calorias)", "Saludando" } },
+		},
+		["Tipos de unidaes"] = {
+			["No estandar"] = {
+				{
+					"Son una unidad de medida que no forma parte de los estándares internacionales de medición",
+					"Saludando",
+				},
+				{ "Que se utiliza en situaciones específicas o locales", "Saludando" },
+				{ "Algunos de estos serian:\nyd, in", "Saludando" },
+			},
+			["Estandar"] = {
+				{
+					"Son una unidad de medida que forma parte de los estándares internacionales de medición",
+					"Saludando",
+				},
+				{ "Se usa de base común para expresar y comparar mediciones", "Saludando" },
+				{ "Algunos de estos serían:\nm, seg, mm, kg, cal" },
+			},
 		},
 		-- ["¿Por qué usar este Conversor de Unidades a las demás?"] = {
 		-- 	{ "Lo que se busca en este conversor no es darte resultados, si no aprender en como resolverlo", "Saludando" },
@@ -232,20 +250,42 @@ local module = {
 			{ "Resuelto seria:", "Saludando", "61.829F" },
 		},
 	},
-
 	["MovimientoRectilinio"] = {
 		["Sacar datos de movimiento"] = {
-			["Con Aceleracion"] = {
-				["Distancia"] = {},
-				["Velocidad"] = {},
-			},
 			["Sin Aceleracion"] = {
-				["Distancia"] = {},
-				["Velocidad"] = {},
+				["Distancia"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "Vi = Velocidad Inicial,\n t = Tiempo.", "Saludando" },
+					{ "Distancia:", "Saludando", "vit" },
+					{ "Distancia calculadora:", "Saludando", "vi * t" },
+				},
+				["Velocidad"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "Vi = Velocidad Inicial,\n t = Tiempo.", "Saludando" },
+					{ "Velocidad:", "Saludando", "d / t" },
+				},
+			},
+			["Con Aceleracion"] = {
+				["Distancia"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "Vi = Velocidad Inicial,\n a = Aceleración,\n t = Tiempo.", "Saludando" },
+					{ "Distancia:", "Saludando", "vit + (1/2 at²" },
+					{ "Distancia calculadora:", "Saludando", "(vi * t) + ((.5 * a) * (t ^ 2))" },
+				},
+				["Velocidad"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "Vi = Velocidad Inicial,\n a = Aceleración,\n t = Tiempo.", "Saludando" },
+					{ "Velocidad:", "Saludando", "vi + at" },
+					{ "Velocidad calculadora:", "Saludando", "vi + (a * t)" },
+				},
 			},
 		},
 		["Sacar datos de como se movera"] = {
-			["Tiempo Maximo"] = {},
+			["Tiempo Maximo"] = {
+				{ "Tenemos que saber si tiene un aceleracion positiva o negativa", "Saludando" },
+				{ "Si es positiva el Tiempo Maximo es infinito", "Saludando" },
+				{ "De lo contrario seria:", "Saludando", "-vi / a" },
+			},
 		},
 		["Principios fisicos que se usan"] = {},
 		["Datos Curiosos"] = {},
@@ -319,5 +359,3 @@ local module = {
 		--
 	},
 }
-
-return module
