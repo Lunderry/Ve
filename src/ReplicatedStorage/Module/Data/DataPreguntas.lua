@@ -1,4 +1,4 @@
-local module = {
+return {
 	["Tutorial"] = {
 		["Tutorial1"] = {
 			{ "Es la primera vez que te veo", "Saludando" },
@@ -232,20 +232,42 @@ local module = {
 			{ "Resuelto seria:", "Saludando", "61.829F" },
 		},
 	},
-
 	["MovimientoRectilinio"] = {
 		["Sacar datos de movimiento"] = {
-			["Con Aceleracion"] = {
-				["Distancia"] = {},
-				["Velocidad"] = {},
-			},
 			["Sin Aceleracion"] = {
-				["Distancia"] = {},
-				["Velocidad"] = {},
+				["Distancia"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "Vi = Velocidad Inicial,\n t = Tiempo.", "Saludando" },
+					{ "Distancia:", "Saludando", "vit" },
+					{ "Distancia calculadora:", "Saludando", "vi * t" },
+				},
+				["Velocidad"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "Vi = Velocidad Inicial,\n t = Tiempo.", "Saludando" },
+					{ "Velocidad:", "Saludando", "d / t" },
+				},
+			},
+			["Con Aceleracion"] = {
+				["Distancia"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "Vi = Velocidad Inicial,\n a = Aceleración,\n t = Tiempo.", "Saludando" },
+					{ "Distancia:", "Saludando", "vit + (1/2 at²" },
+					{ "Distancia calculadora:", "Saludando", "(vi * t) + ((.5 * a) * (t ^ 2))" },
+				},
+				["Velocidad"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "Vi = Velocidad Inicial,\n a = Aceleración,\n t = Tiempo.", "Saludando" },
+					{ "Velocidad:", "Saludando", "vi + at" },
+					{ "Velocidad calculadora:", "Saludando", "vi + (a * t)" },
+				},
 			},
 		},
 		["Sacar datos de como se movera"] = {
-			["Tiempo Maximo"] = {},
+			["Tiempo Maximo"] = {
+				{ "Tenemos que saber si tiene un aceleracion positiva o negativa", "Saludando" },
+				{ "Si es positiva el Tiempo Maximo es infinito", "Saludando" },
+				{ "De lo contrario seria:", "Saludando" }, --poner operacion
+			},
 		},
 		["Principios fisicos que se usan"] = {},
 		["Datos Curiosos"] = {},
@@ -319,5 +341,3 @@ local module = {
 		--
 	},
 }
-
-return module
