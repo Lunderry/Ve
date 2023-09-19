@@ -257,7 +257,7 @@ return {
 					{ "Tienes que tener los siguientes datos:", "Saludando" },
 					{ "Vi = Velocidad Inicial,\n t = Tiempo.", "Saludando" },
 					{ "Distancia:", "Saludando", "vit" },
-					{ "Distancia calculadora:", "Saludando", "vi * t" },
+					{ "Distancia en calculadora:", "Saludando", "vi * t" },
 				},
 				["Velocidad"] = {
 					{ "Tienes que tener los siguientes datos:", "Saludando" },
@@ -270,13 +270,13 @@ return {
 					{ "Tienes que tener los siguientes datos:", "Saludando" },
 					{ "Vi = Velocidad Inicial,\n a = Aceleración,\n t = Tiempo.", "Saludando" },
 					{ "Distancia:", "Saludando", "vit + (1/2 at²" },
-					{ "Distancia calculadora:", "Saludando", "(vi * t) + ((.5 * a) * (t ^ 2))" },
+					{ "Distancia en calculadora:", "Saludando", "(vi * t) + ((.5 * a) * (t ^ 2))" },
 				},
 				["Velocidad"] = {
 					{ "Tienes que tener los siguientes datos:", "Saludando" },
 					{ "Vi = Velocidad Inicial,\n a = Aceleración,\n t = Tiempo.", "Saludando" },
 					{ "Velocidad:", "Saludando", "vi + at" },
-					{ "Velocidad calculadora:", "Saludando", "vi + (a * t)" },
+					{ "Velocidad en calculadora:", "Saludando", "vi + (a * t)" },
 				},
 			},
 		},
@@ -295,17 +295,47 @@ return {
 
 	["CaidaLibre"] = {
 		["Sacar datos de movimiento"] = {
-			["Velocidad Final"] = {},
-			["Altura"] = {},
-			["Tiempo dependiendo de la altura"] = {},
-			-- vf = (g * t)
-			-- h = ((g * (t ^ 2)) / 2)
-			-- t = math.sqrt((2 * h) / g)
+			["Velocidad"] = {
+				{
+					"(Este dato tambien se puede llamar velocidad final es saber en que contexto se tiene que usar)",
+					"Saludando",
+				},
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\nt = Tiempo.", "Saludando" },
+				{ "Velocidad:", "Saludando", "-gt" },
+				{ "Velocidad con Calculadora:", "Saludando", "-g * t" },
+			},
+			["Altura"] = {
+				{ "Aqui se calcula la altura que se a recorrido", "Saludando" },
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\nt = Tiempo.", "Saludando" },
+				{ "Altura:", "Saludando", "gt²/2" },
+				{ "Altura con Calculadora:", "Saludando", "(-g * (t)²)/2" },
+			},
+			["Tiempo con altura"] = {
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\nh = Altura.", "Saludando" },
+				{ "Tiempo:", "Saludando", "√2h/g" },
+				{ "Tiempo con Calculadora:", "Saludando", "√((2 * h)/g)" },
+				{ 'Esta operacion es la misma que "Tiempo Maximo"', "Saludando" },
+			},
+			["Sacar datos de como se movera"] = {
+				["TiempoMaximo"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\nh = Altura.", "Saludando" },
+					{ "Tiempo Maximo:", "Saludando", "√2h/g" },
+					{ "Tiempo Maximo con Calculadora:", "Saludando", "√((2 * h)/g)" },
+					{ 'Esta operacion es la misma que "Tiempo con altura"', "Saludando" },
+				},
+				["Altura que recorrera"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+					{ "Altura que recorrera:", "Saludando", "gTf²/2" },
+					{ "Altura que recorrera con calculadora:", "Saludando", "(g(Tf)²)/2" },
+				},
+			},
 		},
-		["Sacar datos de como se movera"] = {
-			["TiempoMaximo"] = {}, --math.sqrt((2 * h) / g)
-			["Altura que recorrera"] = {}, --g * ((tiempoFinal ^ 2) / 2)
-		},
+
 		["Principios fisicos que se usan"] = {},
 		["Datos Curiosos"] = {},
 
@@ -314,20 +344,55 @@ return {
 	["TiroVertical"] = {
 		["Sacar datos de movimiento"] = {
 			["Con tiempo"] = {
-				["VelocidadInicial"] = {}, -- h = (vi * t) - (0.5 * g) * (t ^ 2)
-				["Velocidad"] = {}, -- v = vi - (g * t)
-				["Altura"] = {}, -- h = (vi * t) - (0.5 * g) * (t ^ 2)
+				["VelocidadInicial"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\nt = Tiempo.", "Saludando" },
+					{ "Velocidad inicial con tiempo:", "Saludando", "g(t/2)" },
+				}, -- vi = g * (t / 2)
+				["Velocidad"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\nt = Tiempo,\nvi = Velocidad inicial.", "Saludando" },
+					{ "Velocidad con tiempo:", "Saludando", "vi - gt" },
+					{ "Velocidad con tiempo en calculadora", "Saludando", "vi - g * t" },
+				}, -- v = vi - (g * t)
+				["Altura"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\nt = Tiempo,\nvi = Velocidad inicial.", "Saludando" },
+					{ "Altura con tiempo:", "Saludando", "vit - 1/2 gt²" },
+					{ "Altura con tiempo en calculadora:", "Saludando", "vi * t - .5 * g * (t)²" },
+				}, -- h = (vi * t) - (0.5 * g) * (t ^ 2)
 			},
 			["Con velocidad"] = {
-				["Altura"] = {}, -- h = ((v ^ 2) - (vi ^ 2)) / (2 * -g)
-				["Tiempo"] = {}, -- t = (vi - v) / g
+				["Altura"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\nv = velocidad,\nvi = Velocidad inicial.", "Saludando" },
+					{ "Altura con velocidad:", "Saludando", "v² - vi² / -(2g)" },
+					{ "Altura con velocidad con calculadora:", "Saludando", "((v)² - (vi)²) / -(2 * g)" },
+				}, -- h = ((v ^ 2) - (vi ^ 2)) / (2 * -g)
+				["Tiempo"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\nv = Velocidad,\nvi = Velocidad inicial.", "Saludando" },
+					{ "Tiempo con velocidad:", "Saludando", "(vi - v)/ g" },
+				}, -- t = (vi - v) / g
 			},
 		},
 		["Sacar datos de como se movera"] = {
-			["Tiempo Maximo"] = {}, --Tsubida * 2
-			["Altura Maxima"] = {}, --  (vi ^ 2) / (2 * g),
-			["Tiempo de Subida"] = {}, -- vi / g,
-			["Velocidad Final"] = {}, --vi - (g * ((vi / g) * 2)),
+			["Tiempo Maximo"] = {
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+			}, --Tsubida * 2
+			["Altura Maxima"] = {
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+			}, --  (vi ^ 2) / (2 * g),
+			["Tiempo de Subida"] = {
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+			}, -- vi / g,
+			["Velocidad Final"] = {
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+			}, --vi - (g * ((vi / g) * 2)),
 		},
 		["Principios fisicos que se usan"] = {},
 		["Datos Curiosos"] = {},
@@ -336,23 +401,52 @@ return {
 	["TiroParabolico"] = {
 		["Sacar datos de movimiento"] = {
 			["Velocidad"] = {
-				["Velocidad X"] = {}, --vi * math.cos(graRad)(rad)
-				["Velocidad Y"] = {}, -- (vi * math.sin(graRad)) - (g * t),
+				["Velocidad X"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+				}, --vi * math.cos(graRad)(rad)
+				["Velocidad Y"] = { "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+				{}, -- (vi * math.sin(graRad)) - (g * t),
 			},
 			["Posicion"] = {
-				["Posicion X"] = {}, --vi * math.cos(graRad)(rad) -- x = vx * t
-				["Posicion Y"] = {}, --  vi * math.sin(graRad)(rad) --y = (vy * t) - (0.5 * g * t ^ 2)
+				["Posicion X"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+				}, --vi * math.cos(graRad)(rad) -- x = vx * t
+				["Posicion Y"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+				}, --  vi * math.sin(graRad)(rad) --y = (vy * t) - (0.5 * g * t ^ 2)
 			},
 			["Tener la velocidad inicial para que tenga..."] = {
-				["Un Tiempo establecido"] = {}, --vi =  math.sqrt((-0.5 * g * t) ^ 2 / math.sin(graRad) ^ 2)
-				["Una Distacia establecida"] = {}, --vi = math.sqrt((-0.5 * g * t) ^ 2 / math.sin(graRad) ^ 2)
+				["Un Tiempo establecido"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+				}, --vi =  math.sqrt((-0.5 * g * t) ^ 2 / math.sin(graRad) ^ 2)
+				["Una Distacia establecida"] = {
+					{ "Tienes que tener los siguientes datos:", "Saludando" },
+					{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+				}, --vi = math.sqrt((-0.5 * g * t) ^ 2 / math.sin(graRad) ^ 2)
 			},
 		},
 		["Sacar datos de como se movera"] = {
-			["Tiempo Maximo"] = {}, -- (2 * (vi * math.sin(graRad))) / g
-			["Altura Maxima"] = {}, --vy ^ 2) / (2 * g),
-			["Tiempo Subida"] = {}, --(vi * math.sin(graRad)) / g
-			["Alcance Horizontal"] = {}, -- -(vx * (vy / g * 2)),
+			["Tiempo Maximo"] = {
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+			}, -- (2 * (vi * math.sin(graRad))) / g
+			["Altura Maxima"] = {
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+			}, --vy ^ 2) / (2 * g),
+			["Tiempo Subida"] = {
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+			}, --(vi * math.sin(graRad)) / g
+			["Alcance Horizontal"] = {
+				{ "Tienes que tener los siguientes datos:", "Saludando" },
+				{ "g = Gravedad,\n Tf = Tiempo Maximo.", "Saludando" },
+			}, -- -(vx * (vy / g * 2)),
 		},
 		["Principios fisicos que se usan"] = {},
 		["Datos Curiosos"] = {},
