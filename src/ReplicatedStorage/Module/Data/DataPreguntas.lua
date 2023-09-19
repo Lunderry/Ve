@@ -257,7 +257,11 @@ return {
 					{ "Tienes que tener los siguientes datos:", "Saludando" },
 					{ "Vi = Velocidad Inicial,\n t = Tiempo.", "Saludando" },
 					{ "Distancia:", "Saludando", "vit" },
+<<<<<<< HEAD
 					{ "Distancia en calculadora:", "Saludando", "vi * t" },
+=======
+					{ "Distancia calculadora:", "Saludando", "vi * t" },
+>>>>>>> 078baf78e9992c8c1e309709eb62c816fcb5c3ea
 				},
 				["Velocidad"] = {
 					{ "Tienes que tener los siguientes datos:", "Saludando" },
@@ -270,13 +274,21 @@ return {
 					{ "Tienes que tener los siguientes datos:", "Saludando" },
 					{ "Vi = Velocidad Inicial,\n a = Aceleración,\n t = Tiempo.", "Saludando" },
 					{ "Distancia:", "Saludando", "vit + (1/2 at²" },
+<<<<<<< HEAD
 					{ "Distancia en calculadora:", "Saludando", "(vi * t) + ((.5 * a) * (t ^ 2))" },
+=======
+					{ "Distancia calculadora:", "Saludando", "(vi * t) + ((.5 * a) * (t ^ 2))" },
+>>>>>>> 078baf78e9992c8c1e309709eb62c816fcb5c3ea
 				},
 				["Velocidad"] = {
 					{ "Tienes que tener los siguientes datos:", "Saludando" },
 					{ "Vi = Velocidad Inicial,\n a = Aceleración,\n t = Tiempo.", "Saludando" },
 					{ "Velocidad:", "Saludando", "vi + at" },
+<<<<<<< HEAD
 					{ "Velocidad en calculadora:", "Saludando", "vi + (a * t)" },
+=======
+					{ "Velocidad calculadora:", "Saludando", "vi + (a * t)" },
+>>>>>>> 078baf78e9992c8c1e309709eb62c816fcb5c3ea
 				},
 			},
 		},
@@ -284,7 +296,11 @@ return {
 			["Tiempo Maximo"] = {
 				{ "Tenemos que saber si tiene un aceleracion positiva o negativa", "Saludando" },
 				{ "Si es positiva el Tiempo Maximo es infinito", "Saludando" },
+<<<<<<< HEAD
 				{ "De lo contrario seria:", "Saludando", "-vi / a" },
+=======
+				{ "De lo contrario seria:", "Saludando" }, --poner operacion
+>>>>>>> 078baf78e9992c8c1e309709eb62c816fcb5c3ea
 			},
 		},
 		["Principios fisicos que se usan"] = {},
